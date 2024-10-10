@@ -13,13 +13,13 @@ endif()
 
 project ("NEA Stealth Game")
 
-set(SDL2_DIR ${CMAKE_CURRENT_LIST_DIR}/SDL2/cmake/)
+set(SDL2_DIR ${CMAKE_CURRENT_LIST_DIR}/Libraries/SDL2/cmake/)
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
 
 # Add source to this project's executable.
-add_executable (CMakeTarget "NEA Stealth Game.cpp" "NEA Stealth Game.h" "Application/Application.cpp" "Application/Application.h")
+add_executable (CMakeTarget "Source/NEA Stealth Game.cpp" "Source/NEA Stealth Game.h" "Source/Application/Application.cpp" "Source/Application/Application.h")
 
 target_link_libraries(CMakeTarget ${SDL2_LIBRARIES})
 
