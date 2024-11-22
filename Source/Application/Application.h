@@ -1,15 +1,19 @@
 #pragma once
 #include <iostream>
 #include "SDL.h"
+#include "Timer.h"
 
 class Application {
 private:
     SDL_Renderer* renderer;
 
     struct color {
-        int r = 0;
-        int g = 0;
-        int b = 0;
+        color(Uint8 r, Uint8 g, Uint8 b, Uint8 a = SDL_ALPHA_OPAQUE) : r(r), g(g), b(b), a(a){} //constructer shorthand
+
+        Uint8 r = 0;
+        Uint8 g = 0;
+        Uint8 b = 0;
+        Uint8 a = SDL_ALPHA_OPAQUE;
     };
 
     struct vector2 {
@@ -24,17 +28,18 @@ private:
     };
 
     std::string appName = "Stealth Game";
-    int screenWidth = 640;
-    int screenHeight = 480;
+    int screenWidth = 1280;
+    int screenHeight = 720;
     color bgColor = color(96, 96, 96);
 
 public:
-	bool ApplicationExited();
+	bool applicationExited();
 
-    void DrawPixel(vector2 p1);
-	void DrawLine(vector2 p1, vector2 p2);
-    void Launch();
-    virtual void ApplicationReady();
-    virtual void ApplicationUpdate();
+    void drawPixel(vector2 p1);
+	void drawLine(vector2 p1, vector2 p2);
+    void launch();
+    virtual void applicationReady();
+    virtual void applicationUpdate(float delta);
+    virtual void applicationPhysicsUpdate(float delta);
 };
 

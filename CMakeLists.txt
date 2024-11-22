@@ -12,6 +12,7 @@ endif()
 
 
 project ("NEA Stealth Game")
+#set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 
 set(SDL2_DIR ${CMAKE_CURRENT_LIST_DIR}/Libraries/SDL2/cmake/)
 find_package(SDL2 REQUIRED)
@@ -19,13 +20,12 @@ include_directories(${SDL2_INCLUDE_DIRS})
 
 
 # Add source to this project's executable.
-add_executable (CMakeTarget "Source/NEA Stealth Game.cpp" "Source/NEA Stealth Game.h" "Source/Application/Application.cpp" "Source/Application/Application.h")
+add_executable (CMakeTarget "Source/NEA Stealth Game.cpp" "Source/NEA Stealth Game.h" "Source/Application/Application.cpp" "Source/Application/Application.h" "Source/Application/Timer.cpp" "Source/Application/Timer.h")
+
 
 target_link_libraries(CMakeTarget ${SDL2_LIBRARIES})
 
 
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET CMakeTarget PROPERTY CXX_STANDARD 20)
-endif()
+
 
 # TODO: Add tests and install targets if needed.
