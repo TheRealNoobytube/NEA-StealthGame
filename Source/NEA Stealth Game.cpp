@@ -1,7 +1,5 @@
 ﻿#include "NEA Stealth Game.h"
 
-using namespace std;
-
 
 class StealthGame : public Application {
 
