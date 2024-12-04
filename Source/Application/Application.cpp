@@ -1,18 +1,24 @@
 #include "Application.h"
 
-bool Application::applicationExited() {
-    SDL_Event event;
-    SDL_PollEvent(&event);
+bool Application::applicationExited(SDL_Event& event) {
     if (event.type == SDL_QUIT) {
         return true;
     }
     return false;
 }
 
+void Application::onApplicationExited() {
+
+}
+
+std::string Application::getBasePath() {
+    return this->basePath;
+}
+
 
 void Application::launch() {
     SDL_Init(SDL_INIT_VIDEO);
-    SDL_Window* window = SDL_CreateWindow(
+    this->window = SDL_CreateWindow(
         appName.c_str(), //must pass in as C string because SDL2 is a C library and won't know what to do with a c++ string
         SDL_WINDOWPOS_UNDEFINED,
         SDL_WINDOWPOS_UNDEFINED,
@@ -21,9 +27,9 @@ void Application::launch() {
         SDL_WINDOW_RESIZABLE // allows the window to be resizable, but you already knew that
     );
 
-    SDL_SetWindowMinimumSize(window, 640, 360);
+    SDL_SetWindowMinimumSize(this->window, 640, 360);
 
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+    renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_SOFTWARE);
 
     Timer updateTimer = Timer();
     updateTimer.start();
@@ -40,15 +46,26 @@ void Application::launch() {
     applicationUpdate(NANOSECONDSPERFRAME);
     applicationPhysicsUpdate(NANOSECONDSPERFRAME);
 
-    //Update loop
+    SDL_Event event;
+    SDL_PollEvent(&event);
 
-    while (!applicationExited()) {
+    //Update loop
+    while (!applicationExited(*&event)) {
         float currentTime = updateTimer.getTime_Nano();
         float elapsed = currentTime - lastUpdate;
         lag += currentTime - lastIteration;
 
         lastIteration = currentTime;
 
+        SDL_PollEvent(&event);
+        handleEvent(*&event);
+
+        //detects when the window is resized. If it is, the textures get stretched to fit the new window size
+        if (event.type == SDL_WINDOWEVENT) { 
+            if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
+                stretchWindow();
+            }
+        }
 
         if (elapsed >= NANOSECONDSPERFRAME) {
             SDL_SetRenderDrawColor(renderer, bgColor.r, bgColor.g, bgColor.b, bgColor.a);
@@ -68,10 +85,10 @@ void Application::launch() {
 
             lastUpdate = currentTime;
         }
-        
     }
 
-    SDL_DestroyWindow(window);
+    onApplicationExited();
+    SDL_DestroyWindow(this->window);
     SDL_Quit();
 }
 
@@ -81,7 +98,23 @@ void Application::applicationUpdate(float delta){
 }
 void Application::applicationPhysicsUpdate(float delta) {
 }
+void Application::handleEvent(SDL_Event& event) {
+
+}
+
+void Application::stretchWindow() {
+    int w = 0;
+    int h = 0;
+    SDL_GetWindowSize(getWindow(), &w, &h);
+
+    SDL_RenderSetScale(getRenderer(), (float)w / viewportWidth, (float)h / viewportHeight);
+}
+
 
 SDL_Renderer* Application::getRenderer() {
     return this->renderer;
+}
+
+SDL_Window* Application::getWindow() {
+    return this->window;
 }

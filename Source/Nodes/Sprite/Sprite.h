@@ -6,12 +6,10 @@
 
 class Sprite : public Node2D {
 private:
-	Texture texture = Texture(nullptr, "");
+	Texture* texture;
 
 public:
-	Sprite(std::string texturePath);
-	Sprite(Texture texture);
-	Sprite();
+	Sprite(Texture* texture = nullptr);
 	void ready() override;
 	void update(float delta) override;
 	

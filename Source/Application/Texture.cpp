@@ -27,9 +27,9 @@ void Texture::draw(float posX, float posY, float scaleX, float scaleY) {
 
 void Texture::setTexture(std::string newTexturePath) {
 	texture = IMG_LoadTexture(this->renderer, newTexturePath.c_str()); //convert to c string because SDL is written in C which doesn't have standard strings
-
+	
 	if (texture == NULL) {
-		std::cout << "TEXTURE NOT FOUND at " << newTexturePath;
+		std::cout << "TEXTURE NOT FOUND at " << newTexturePath << "\n";
 	}
 	else {
 		this->texturePath = texturePath;

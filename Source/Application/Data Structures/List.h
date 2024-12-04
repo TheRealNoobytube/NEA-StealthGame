@@ -39,8 +39,21 @@ public:
 		this->array[index] = NULL;
 		size--;
 
+		//cleans array by preventing any NULL values between elements, so all elements are contiguous
+		for (int i = index + 1; i < maxSize; i++) {
+			if (this->array[i] != NULL) {
+				T temp = this->array[i];
+				this->array[i] = NULL;
+				this->array[i - 1] = temp;
+			}
+		}
+
+
 		if (size <= maxSize / 2) {
-			shrinkArray();
+			if (maxSize > 2) {
+				shrinkArray();
+			}
+			
 		}
 
 		return temp;
@@ -87,7 +100,7 @@ private:
 			newArray[i] = this->array[i];
 		}
 
-		delete this->array; //we have to manually delete any variable dyanamically allocated to memory
+		delete[] this->array; //we have to manually delete any variable dyanamically allocated to memory
 
 		this->array = newArray;
 		maxSize *= 2;
@@ -101,9 +114,10 @@ private:
 			newArray[i] = this->array[i];
 		}
 
-		delete this->array; 
+		delete[] this->array;
 
 		this->array = newArray;
+
 		maxSize = size;
 	}
 

@@ -14,7 +14,7 @@ private:
 	std::string name;
 
 public:
-	Node();
+	Node(std::string name = "Node");
 
 	virtual void ready();
 	virtual void update(float delta);

@@ -10,6 +10,7 @@
 class Application {
 private:
     SDL_Renderer* renderer;
+    SDL_Window* window;
 
     struct Color {
         Color(Uint8 r, Uint8 g, Uint8 b, Uint8 a = SDL_ALPHA_OPAQUE) : r(r), g(g), b(b), a(a){} //constructer shorthand
@@ -21,18 +22,28 @@ private:
     };
 
     std::string appName = "Stealth Game";
+    std::string basePath = SDL_GetBasePath();
     int screenWidth = 1280;
     int screenHeight = 720;
+    int viewportWidth = 640;
+    int viewportHeight = 360;
     Color bgColor = Color(96, 96, 96);
 
 public:
-	bool applicationExited();
+	bool applicationExited(SDL_Event& event);
+    void onApplicationExited();
+
+    std::string getBasePath();
 
     void launch();
     virtual void applicationReady();
     virtual void applicationUpdate(float delta);
     virtual void applicationPhysicsUpdate(float delta);
+    virtual void handleEvent(SDL_Event& event);
 
-    SDL_Renderer* Application::getRenderer();
+    void stretchWindow();
+
+    SDL_Renderer* getRenderer();
+    SDL_Window* getWindow();
 };
 

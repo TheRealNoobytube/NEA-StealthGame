@@ -2,39 +2,53 @@
 
 class StealthGame : public Application {
 
-	Node* root = new Node();
+	
 	SceneTree* sceneTree = nullptr;
 
-	Sprite* sprite = new Sprite();
+	Sprite* sprite;
+	Node* node = new Node();
 
 	void applicationReady() override{
-		sceneTree = new SceneTree(root, getRenderer());
+		sceneTree = new SceneTree(node, getRenderer(), getBasePath());
 
-		Node* child1 = new Node();
-		child1->setName("one");
-		Node* child2 = new Node();
-		child2->setName("two");
+		Texture* texture = new Texture(getRenderer(), getBasePath() + "../Assets/testsprite.png");
+		sprite = new Sprite(texture);
 
-		root->setName("root");
-		root->addChild(child1);
-		root->addChild(child2);
-		root->addChild(sprite);
-
-		
+		SDL_RenderSetScale(getRenderer(), 2, 2);
 	}
 
+
 	void applicationPhysicsUpdate(float fixedDelta) override {
-		sceneTree->physicsUpdateNodes(root, fixedDelta);
+		sceneTree->physicsUpdateNodes(sceneTree->getRoot(), fixedDelta);
 		sprite->posX += 1;
 	}
 
+	int timer = 0;
+
 	void applicationUpdate(float delta) override{
-		sceneTree->updateNodes(root, delta);
+		sceneTree->updateNodes(sceneTree->getRoot(), delta);
+
+		timer++;
+
+		if (timer > 10) {
+			timer = 0;
+
+			if (sceneTree->getCurrentScene() == node) {
+				sceneTree->changeScene(sprite);
+			}
+			else if (sceneTree->getCurrentScene() == sprite) {
+				sceneTree->changeScene(node);
+			}
+			
+
+		}
+	}
+
+	void onApplicationExited() {
+		delete sceneTree;
 	}
 
 };
-
-
 
 
 int main(int argc, char* argv[])

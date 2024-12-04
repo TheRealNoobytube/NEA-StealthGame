@@ -1,7 +1,8 @@
 #include "Node.h"
 #include <iostream>
 
-Node::Node() {
+Node::Node(std::string name) {
+	setName(name);
 	this->parent = nullptr;
 	this->sceneTree = nullptr;
 	this->children = List<Node*>();
@@ -14,6 +15,7 @@ void Node::addChild(Node* node) {
 		std::cout << this->name << " cant add " << node->name << " because it already has a parent";
 		return;
 	}
+	node->parent = this;
 
 	this->children.add(node);
 	
@@ -34,9 +36,12 @@ void Node::removeChild(Node* node) {
 }
 
 void Node::removeChild(int index) {
+	Node* node = getChild(index);
 	if (sceneTree != nullptr) {
-		getChild(index)->sceneTreeExited();
+		node->sceneTreeExited();
 	}
+	node->parent = nullptr;
+
 	this->children.remove(index);
 }
 
@@ -103,11 +108,11 @@ void Node::setSceneTree(SceneTree* sceneTree) {
 }
 
 void Node::ready() {
-	std::cout << "ready " << name << "\n";
+	//std::cout << "ready " << name << "\n";
 }
 void Node::update(float delta) {
-	std::cout << "update " << name << "\n";
+	//std::cout << "update " << name << "\n";
 }
 void Node::physicsUpdate(float fixedDelta) {
-	std::cout << "fixed " << name << "\n";
+	//std::cout << "fixed " << name << "\n";
 }
