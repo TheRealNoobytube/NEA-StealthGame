@@ -1,6 +1,7 @@
 #pragma once
 #include <math.h>
 #include <stdexcept>
+#include <iostream>
 
 //no cpp file because template classes are difficult to create when the class is split into two files
 //sacrifices organization and c++ intellisense in order to minimize headaches trying to find an elegant solution
@@ -13,6 +14,10 @@ public:
 		
 		this->maxSize = initialSize;
 		this->array = new T[maxSize];
+	}
+	
+	~List() {
+		delete[] this->array;
 	}
 
 	//needed to add elements to the private array. when too many elements are in the array, we grow the array
@@ -32,6 +37,7 @@ public:
 	//needed to remove elements from the private array. when the array is bigger than it needs to be, we shrink the array
 	T remove(int index) {
 		if (index > size) {
+			std::cout << "INDEX " << index << " OUT OF RANGE";
 			throw std::out_of_range("tried to remove element out of bounds");
 		}
 
@@ -71,7 +77,8 @@ public:
 	T get(int index) {
 		//prevent program from going out of bounds of the array
 		if (index >= size) {
-			throw std::out_of_range("tried to remove element out of bounds");
+			std::cout << "INDEX " << index << " OUT OF RANGE";
+			throw std::out_of_range("tried to get element out of bounds");
 		}
 
 		return this->array[index];
@@ -83,6 +90,16 @@ public:
 
 	int getMaxSize() {
 		return this->maxSize;
+	}
+
+	void clear() {
+		delete[] this->array;
+		this->maxSize = 2;
+		this->array = new T[maxSize];
+	}
+
+	bool isEmpty() {
+		return size == 0;
 	}
 
 private:
@@ -121,5 +138,6 @@ private:
 		maxSize = size;
 	}
 
+	
 
 };

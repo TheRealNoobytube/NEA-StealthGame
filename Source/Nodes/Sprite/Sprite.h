@@ -9,7 +9,7 @@ private:
 	Texture* texture;
 
 public:
-	Sprite(Texture* texture = nullptr);
+	Sprite(Texture* texture, std::string name = "Sprite");
 	void ready() override;
 	void update(float delta) override;
 	

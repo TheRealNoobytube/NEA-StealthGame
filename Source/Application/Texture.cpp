@@ -2,9 +2,21 @@
 
 
 
+Texture::Texture(SDL_Renderer* renderer, SDL_Surface* surface) {
+	this->renderer = renderer;
+	setTexture(surface);
+}
+
 Texture::Texture(SDL_Renderer* renderer, std::string texturePath) {
 	this->renderer = renderer;
 	setTexture(texturePath);
+}
+
+Texture::~Texture() {
+	if (this->texture != nullptr) {
+		SDL_DestroyTexture(this->texture); //have to destroy the SDL_Texture otherwise it will stay allocated in memory
+										   //even if we delete this Texture class
+	}
 }
 
 
@@ -24,14 +36,24 @@ void Texture::draw(float posX, float posY, float scaleX, float scaleY) {
 	SDL_RenderCopyF(this->renderer, texture, NULL, &dstRect);
 }
 
+//used for creating text on screen using fonts
+void Texture::setTexture(SDL_Surface* surface) {
+	texture = SDL_CreateTextureFromSurface(this->renderer, surface);
 
+	if (texture == NULL) {
+		std::cout << "SURFACE IS NOT VALID " << surface << "\n";
+	}
+
+}
+
+//used to get images and set them as textures to render on screen
 void Texture::setTexture(std::string newTexturePath) {
-	texture = IMG_LoadTexture(this->renderer, newTexturePath.c_str()); //convert to c string because SDL is written in C which doesn't have standard strings
+	texture = IMG_LoadTexture(this->renderer, newTexturePath.c_str());
 	
 	if (texture == NULL) {
 		std::cout << "TEXTURE NOT FOUND at " << newTexturePath << "\n";
 	}
 	else {
-		this->texturePath = texturePath;
+		this->texturePath = newTexturePath;
 	}
 }

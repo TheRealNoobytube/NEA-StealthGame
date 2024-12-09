@@ -2,24 +2,27 @@
 #include <iostream>
 #include "SDL.h"
 #include "SDL_image.h"
+#include "SDL_ttf.h"
 #include "Timer.h"
-#include "../Nodes/Node.h"
-#include "../Nodes/Sprite/Sprite.h"
+#include "Color.h"
+#include "Vector2D.h"
 #include "Data Structures/List.h"
+
+#include "../Nodes/Node.h"
+#include "../Nodes/Node2D/Node2D.h"
+#include "../Nodes/Sprite/Sprite.h"
+
+#include "../UI/Label/Label.h"
+#include "../UI/Button/Button.h"
+
 
 class Application {
 private:
     SDL_Renderer* renderer;
     SDL_Window* window;
 
-    struct Color {
-        Color(Uint8 r, Uint8 g, Uint8 b, Uint8 a = SDL_ALPHA_OPAQUE) : r(r), g(g), b(b), a(a){} //constructer shorthand
-
-        Uint8 r = 0;
-        Uint8 g = 0;
-        Uint8 b = 0;
-        Uint8 a = SDL_ALPHA_OPAQUE;
-    };
+    const int FPS = 60;
+    const float NANOSECONDSPERFRAME = 1000000000 / (float)FPS;
 
     std::string appName = "Stealth Game";
     std::string basePath = SDL_GetBasePath();
@@ -27,6 +30,8 @@ private:
     int screenHeight = 720;
     int viewportWidth = 640;
     int viewportHeight = 360;
+    Vector2D renderScale = Vector2D(1, 1);
+
     Color bgColor = Color(96, 96, 96);
 
 public:
@@ -39,7 +44,7 @@ public:
     virtual void applicationReady();
     virtual void applicationUpdate(float delta);
     virtual void applicationPhysicsUpdate(float delta);
-    virtual void handleEvent(SDL_Event& event);
+    virtual void handleInput(SDL_Event& event);
 
     void stretchWindow();
 

@@ -11,8 +11,11 @@ private:
 	SDL_Texture* texture;
 
 public:
+	Texture(SDL_Renderer* renderer, SDL_Surface* surface);
 	Texture(SDL_Renderer* renderer, std::string texturePath);
+	~Texture();
 	void draw(float posX, float posY, float scaleX = 1, float scaleY = 1);
 
 	void setTexture(std::string newTexturePath);
+	void setTexture(SDL_Surface* surface);
 };

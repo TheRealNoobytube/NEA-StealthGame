@@ -8,10 +8,26 @@ private:
 	Node* root;
 	Node* currentScene;
 
+	List<Node*> queuedForDeletion;
+
 	SDL_Renderer* renderer;
 	std::string basePath;
 
+	//input buffers
+	const int KEYBUFFERSIZE = SDL_NUM_SCANCODES;
+	bool keysPressed[SDL_NUM_SCANCODES] = { false }; //322 is how many possible keys SDL can detect input for
+	bool keysJustPressed[SDL_NUM_SCANCODES] = { false };
+	bool keysReleased[SDL_NUM_SCANCODES] = { false };
+
+	const int MOUSEBUFFERSIZE = 4;
+	bool mouseButtonsPressed[4] = { false }; //only want to take into account 4 possible kinds of mouse presses
+	bool mouseButtonsJustPressed[4] = { false };
+	bool mouseButtonsReleased[4] = { false };
+
 public:
+	
+
+
 	SceneTree(Node* mainScene, SDL_Renderer* renderer, std::string basePath = SDL_GetBasePath());
 	Node* getRoot();
 	SDL_Renderer* getRenderer();
@@ -20,8 +36,27 @@ public:
 	void readyNodes(Node* current);
 	void updateNodes(Node* current, float delta);
 	void physicsUpdateNodes(Node* current, float fixedDelta);
+	void freeNodes(Node* current);
 
-	void deleteScene(Node* current);
+	void addToQueueForDeletion(Node* node);
+	List<Node*>* getQueuedForDeletion();
+
 	void changeScene(Node* newScene);
 	Node* getCurrentScene();
+
+	Vector2D getRenderScale();
+
+	void handleInput(SDL_Event& event);
+
+	void resetInputBuffers();
+
+	bool isKeyPressed(int key);
+	bool isKeyJustPressed(int key);
+	bool isKeyReleased (int key);
+
+	bool isMouseButtonPressed(int button);
+	bool isMouseButtonJustPressed(int button);
+	bool isMouseButtonReleased(int button);
+
+
 };

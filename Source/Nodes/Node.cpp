@@ -1,11 +1,11 @@
 #include "Node.h"
-#include <iostream>
+
 
 Node::Node(std::string name) {
+	id = ID++;
 	setName(name);
 	this->parent = nullptr;
 	this->sceneTree = nullptr;
-	this->children = List<Node*>();
 }
 
 //method for adding children
@@ -63,6 +63,26 @@ void Node::sceneTreeExited() { //pre-order depth first traversal
 
 
 
+
+bool Node::hasChild(std::string name) {
+	for (int i = 0; i < getChildCount(); i++) {
+		if (getChild(i)->name == name) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Node::hasChild(Node* node) {
+	for (int i = 0; i < getChildCount(); i++) {
+		if (getChild(i) == node) {
+			return true;
+		}
+	}
+	return false;
+}
+
+
 //methods for getting children
 
 Node* Node::getChild(std::string name) {
@@ -115,4 +135,50 @@ void Node::update(float delta) {
 }
 void Node::physicsUpdate(float fixedDelta) {
 	//std::cout << "fixed " << name << "\n";
+}
+
+
+void Node::queueFree() {
+	if (getParent() != nullptr) {
+		getParent()->removeChild(this);
+	}
+	getSceneTree()->addToQueueForDeletion(this);
+}
+
+
+Vector2D Node::getMousePosition() {
+	int x;
+	int y;
+	SDL_GetMouseState(&x, &y);
+	return Vector2D(x, y);
+}
+
+void Node::drawRect(Vector2D position, Vector2D size, Color color) {
+	SDL_FRect rect = { position.x, position.y, size.x, size.y };
+	SDL_SetRenderDrawColor(getSceneTree()->getRenderer(), color.r, color.g, color.b, color.a);
+	SDL_RenderFillRectF(getSceneTree()->getRenderer(), &rect);
+}
+
+
+bool Node::isKeyPressed(Uint32 key) {
+	return sceneTree->isKeyPressed(key);
+}
+
+bool Node::isKeyJustPressed(Uint32 key) {
+	return sceneTree->isKeyJustPressed(key);
+}
+
+bool Node::isKeyReleased(Uint32 key) {
+	return sceneTree->isKeyReleased(key);
+}
+
+
+bool Node::isMouseButtonPressed(Uint8 button) {
+	return sceneTree->isMouseButtonPressed(button);
+}
+bool Node::isMouseButtonJustPressed(Uint8 button) {
+	return sceneTree->isMouseButtonJustPressed(button);
+}
+bool Node::isMouseButtonReleased(Uint8 button) {
+	return sceneTree->isMouseButtonReleased(button);
 }
