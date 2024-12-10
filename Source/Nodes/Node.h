@@ -24,6 +24,8 @@ private:
 
 	std::string name;
 
+	bool isReady = false;
+
 public:
 	int id;
 

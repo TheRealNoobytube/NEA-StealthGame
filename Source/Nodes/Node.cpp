@@ -128,13 +128,17 @@ void Node::setSceneTree(SceneTree* sceneTree) {
 }
 
 void Node::ready() {
+	if (isReady) {
+		return;
+	}
+	isReady = true;
 	//std::cout << "ready " << name << "\n";
 }
 void Node::update(float delta) {
 	//std::cout << "update " << name << "\n";
 }
 void Node::physicsUpdate(float fixedDelta) {
-	//std::cout << "fixed " << name << "\n";
+	std::cout << "fixed " << name << "\n";
 }
 
 

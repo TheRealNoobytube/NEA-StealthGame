@@ -2,7 +2,10 @@
 
 
 Label::Label(std::string filepath, std::string name) : Node2D(name) {
-	setFont(filepath);
+	if (!filepath.empty()) {
+		setFont(filepath);
+	}
+	
 }
 
 Label::Label(TTF_Font* font, std::string name) : Node2D(name) {
@@ -74,6 +77,9 @@ void Label::ready() {
 }
 
 void Label::update(float delta) {
+	__super::update(delta);
 	renderText();
-	this->fontTexture->draw(position.x, position.y, scale.x, scale.y);
+	Vector2D globalPos = getGlobalPosition();
+	this->fontTexture->draw(globalPos.x, globalPos.y, scale.x, scale.y);
+	getGlobalPosition();
 }

@@ -6,13 +6,13 @@ class StealthGame : public Application {
 	std::string filepath = getBasePath() + "..\\Fonts\\OpenSans-VariableFont_wdth,wght.ttf";
 
 	SceneTree* sceneTree = nullptr;
-	Node* currentScene = new Node("MainScene");
+	MainMenu* currentScene = new MainMenu("MainMenu");
 
 
 	void applicationReady() override{
 		sceneTree = new SceneTree(currentScene, getRenderer(), getBasePath());
-		Button* button = new Button();
-		currentScene->addChild(button);
+		//Button* button = new Button();
+		//currentScene->addChild(button);
 	}
 
 	void applicationPhysicsUpdate(float fixedDelta) override {

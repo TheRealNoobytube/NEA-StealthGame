@@ -16,7 +16,7 @@ public:
 	Color color = Color(0, 0, 0, 255);
 	std::string text;
 	
-	Label(std::string filepath, std::string name = "Label");
+	Label(std::string filepath = "", std::string name = "Label");
 	Label(TTF_Font* font, std::string name = "Label");
 	~Label();
 

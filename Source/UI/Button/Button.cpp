@@ -1,10 +1,21 @@
 #include "Button.h"
 
+Button::Button(std::string name) : Node2D(name) {
+	addChild(&label);
+}
+
 void Button::ready(){
-	position = Vector2D(100, 100);
+	__super::ready();
+	//position = Vector2D(100, 100);
+
+	label.setFont(getSceneTree()->getBasePath() + "..\\Fonts\\OpenSans-VariableFont_wdth,wght.ttf");
+	label.text = "Button";
+	label.position.x = 10;
+	label.position.y = 10;
 }
 
 void Button::update(float delta){
+	__super::update(delta);
 	if (isMouseButtonReleased(SDL_BUTTON_LEFT)) {
 		if (isMouseInside && pressed) {
 			onClick();
@@ -75,4 +86,14 @@ void Button::mouseInside() {
 
 void Button::onMouseExit() {
 	std::cout << "Mouse exited" << "\n";
+}
+
+void Button::setText(std::string text) {
+	std::cout << "text";
+	this->label.text = text;
+	std::cout << "text";
+}
+
+std::string Button::getText() {
+	return this->label.text;
 }
