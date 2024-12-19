@@ -8,12 +8,12 @@
 #include "Vector2D.h"
 #include "Data Structures/List.h"
 
-#include "../Nodes/Node.h"
-#include "../Nodes/Node2D/Node2D.h"
-#include "../Nodes/Sprite/Sprite.h"
+#include "Source/Nodes/Node.h"
+#include "Source/Nodes/Node2D/Node2D.h"
+#include "Source/Nodes/Sprite/Sprite.h"
 
-#include "../UI/Label/Label.h"
-#include "../UI/Button/Button.h"
+#include "Source/UI/Label/Label.h"
+#include "Source/UI/Button/Button.h"
 
 
 class Application {
@@ -28,8 +28,8 @@ private:
     std::string basePath = SDL_GetBasePath();
     int screenWidth = 1280;
     int screenHeight = 720;
-    int viewportWidth = 640;
-    int viewportHeight = 360;
+    int viewportWidth = 320;
+    int viewportHeight = 180;
     Vector2D renderScale = Vector2D(1, 1);
 
     Color bgColor = Color(96, 96, 96);
@@ -50,5 +50,7 @@ public:
 
     SDL_Renderer* getRenderer();
     SDL_Window* getWindow();
+
+    Vector2D getViewportSize();
 };
 

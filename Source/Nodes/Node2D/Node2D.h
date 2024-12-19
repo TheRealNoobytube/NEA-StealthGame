@@ -1,5 +1,5 @@
 #pragma once
-#include "../Node.h"
+#include "Source/Nodes/Node.h"
 
 class Node2D : public Node {
 public:

@@ -21,7 +21,7 @@ void Node::addChild(Node* node) {
 	
 	if (sceneTree != nullptr) {
 		node->sceneTreeEntered(sceneTree);
-		this->sceneTree->readyNodes(node);
+		sceneTree->readyNodes(node);
 	}
 }
 
@@ -138,7 +138,7 @@ void Node::update(float delta) {
 	//std::cout << "update " << name << "\n";
 }
 void Node::physicsUpdate(float fixedDelta) {
-	std::cout << "fixed " << name << "\n";
+	//std::cout << "fixed " << name << "\n";
 }
 
 

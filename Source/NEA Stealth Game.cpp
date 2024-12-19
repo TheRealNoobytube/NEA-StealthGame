@@ -1,18 +1,16 @@
 ﻿#include "NEA Stealth Game.h"
-#include "Scenes/MainMenu.h"
+#include "Scenes/Menus/MainMenu/MainMenu.h"
+#include "Scenes/Menus/AboutMenu/AboutMenu.h"
 
 class StealthGame : public Application {
 
 	std::string filepath = getBasePath() + "..\\Fonts\\OpenSans-VariableFont_wdth,wght.ttf";
 
 	SceneTree* sceneTree = nullptr;
-	MainMenu* currentScene = new MainMenu("MainMenu");
-
+	MainMenu* currentScene = new MainMenu();
 
 	void applicationReady() override{
-		sceneTree = new SceneTree(currentScene, getRenderer(), getBasePath());
-		//Button* button = new Button();
-		//currentScene->addChild(button);
+		sceneTree = new SceneTree(currentScene, getRenderer(), getViewportSize(), getBasePath());
 	}
 
 	void applicationPhysicsUpdate(float fixedDelta) override {
@@ -21,7 +19,7 @@ class StealthGame : public Application {
 
 	void applicationUpdate(float delta) override{
 		sceneTree->updateNodes(sceneTree->getRoot(), delta);
-
+		
 		//delete all the nodes cleared for deletion once the frame is complete
 		//have to queue until end of frame because some Nodes may still need to access a Node the frame before it gets deleted
 		//deleting a Node midframe is not very intuitive and usually the source of a lot of glitches
@@ -30,6 +28,10 @@ class StealthGame : public Application {
 				sceneTree->freeNodes(sceneTree->getQueuedForDeletion()->get(i));
 			}
 			sceneTree->getQueuedForDeletion()->clear();
+		}
+
+		if (sceneTree->requestedSceneChange()) {
+			sceneTree->setCurrentScene();
 		}
 
 		//reset the input buffers because otherwise it will just press or release every frame, which isn't correct

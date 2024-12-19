@@ -1,8 +1,8 @@
 #pragma once
-#include "../Node2D/Node2D.h"
+#include "Source/Nodes/Node2D/Node2D.h"
 #include "SDL.h"
 #include "SDL_image.h"
-#include "../../Application/Texture.h"
+#include "Source/Application/Texture.h"
 
 class Sprite : public Node2D {
 private:

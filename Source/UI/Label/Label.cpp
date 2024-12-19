@@ -1,18 +1,16 @@
 #include "Label.h"
 
 
-Label::Label(std::string filepath, std::string name) : Node2D(name) {
-	if (!filepath.empty()) {
-		setFont(filepath);
-	}
-	
-}
-
 Label::Label(TTF_Font* font, std::string name) : Node2D(name) {
 	this->font = font;
 }
 
-Label::~Label(){
+Label::Label(std::string text, std::string name) : Node2D(name) {
+	this->text = text;
+}
+
+Label::~Label() {
+	this->text = text;
 	TTF_CloseFont(this->font);
 	delete fontTexture;
 	
@@ -20,23 +18,43 @@ Label::~Label(){
 
 void Label::setFont(std::string filepath) {
 	TTF_CloseFont(this->font); //deletes the current font so we can replace it in this function
-
 	this->font = TTF_OpenFont(filepath.c_str(), this->fontSize);
+	this->fontFilePath = filepath;
+	generateTextSurface(); //updates the textSize variable so you don't have to wait until next frame to get the updated size information
 }
 
-void Label::renderText() {
-	std::string text = this->text;
-	if (text.empty()) {
+
+void Label::generateTextSurface() {
+	std::string text = this->text; 
+	if (text.empty()) { //cant render text if theres no text to render, so we set text to a single whitespace if its empty
 		text = " ";
 	}
 
-	SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(this->font, text.c_str(), { color.r, color.g, color.b, color.a }, textWrapLength);
+	SDL_FreeSurface(this->textSurface); //deletes the current textSurface so we can replace it in this function
+
+	//creates a surface used to generate a texture
+	if (antiAliasing) {
+		this->textSurface = TTF_RenderText_Blended_Wrapped(this->font, text.c_str(), { color.r, color.g, color.b, color.a }, textWrapLength);
+	}
+	else {
+		this->textSurface = TTF_RenderText_Solid_Wrapped(this->font, text.c_str(), { color.r, color.g, color.b, color.a }, textWrapLength);
+	}
+
+	if (textSurface != nullptr) {
+		textSize = Vector2D(this->textSurface->w, this->textSurface->h);
+	}
+}
+
+
+void Label::renderText() {
+	generateTextSurface();
 
 	delete this->fontTexture; //delete the previous texture, replace it with the new one below
 	this->fontTexture = new Texture(getSceneTree()->getRenderer(), textSurface);
 
-	SDL_FreeSurface(textSurface); // dont need textSurface anymore, won't be used anywhere 
-	textSurface = nullptr; //so we deallocate it from memory to prevent a memory leak
+	Vector2D globalPos = getGlobalPosition();
+	this->fontTexture->draw(globalPos.x, globalPos.y, scale.x, scale.y);
+
 }
 
 
@@ -71,15 +89,20 @@ int Label::getFontSize() {
 	return this->fontSize;
 }
 
+Vector2D Label::getTextSize() {
+	return textSize;
+}
+
 
 void Label::ready() {
 	__super::ready();
+	if (font == nullptr) {
+		setFont(getSceneTree()->getBasePath() + "..\\Fonts\\opensans.ttf");
+	}
+	generateTextSurface();
 }
 
 void Label::update(float delta) {
 	__super::update(delta);
 	renderText();
-	Vector2D globalPos = getGlobalPosition();
-	this->fontTexture->draw(globalPos.x, globalPos.y, scale.x, scale.y);
-	getGlobalPosition();
 }

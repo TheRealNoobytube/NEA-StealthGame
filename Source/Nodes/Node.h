@@ -1,7 +1,9 @@
 #pragma once
-#include "../Application/Color.h"
-#include "../Application/Data Structures/List.h"
-#include "../Application/Vector2D.h"
+#include "Source/Application/Color.h"
+#include "Source/Application/Data Structures/List.h"
+#include "Source/Application/Vector2D.h"
+#include "Source/Application/Signal.h"
+
 #include <iostream>
 #include <string>
 

@@ -1,15 +1,16 @@
 #include "SceneTree.h"
 
-SceneTree::SceneTree(Node* mainScene, SDL_Renderer* renderer, std::string basePath) {
+SceneTree::SceneTree(Node* mainScene, SDL_Renderer* renderer, Vector2D viewportSize, std::string basePath) {
 	this->root = new Node("Root");
 	this->currentScene = mainScene;
+	this->viewportSize = viewportSize;
+	this->renderer = renderer;
+	this->basePath = basePath;
 
 	root->setSceneTree(this); //root doesn't have any parents because its at the top of the tree, so we don't need to set its parent here
 	root->addChild(currentScene);
 	root->ready();
 
-	this->renderer = renderer;
-	this->basePath = basePath;
 }
 
 
@@ -51,9 +52,18 @@ void SceneTree::physicsUpdateNodes(Node* current, float fixedDelta) { //pre-orde
 
 
 void SceneTree::changeScene(Node* newScene) {
+	nextScene = newScene;
+}
+
+bool SceneTree::requestedSceneChange() {
+	return nextScene;
+}
+
+void SceneTree::setCurrentScene() {
 	root->removeChild(this->currentScene);
-	this->currentScene = newScene;
+	currentScene = nextScene;
 	root->addChild(this->currentScene);
+	nextScene = nullptr;
 }
 
 Node* SceneTree::getCurrentScene() {
@@ -82,6 +92,10 @@ Vector2D SceneTree::getRenderScale() {
 	float y;
 	SDL_RenderGetScale(getRenderer(), &x, &y);
 	return Vector2D(x, y);
+}
+
+Vector2D SceneTree::getViewportSize() {
+	return this->viewportSize;
 }
 
 

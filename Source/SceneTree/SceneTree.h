@@ -1,17 +1,20 @@
 #pragma once
 #include "SDL.h"
-#include "../Nodes/Node.h"
+#include "Source/Nodes/Node.h"
 
 class SceneTree {
 
 private:
 	Node* root;
 	Node* currentScene;
+	Node* nextScene = nullptr;
 
 	List<Node*> queuedForDeletion;
 
 	SDL_Renderer* renderer;
 	std::string basePath;
+
+	Vector2D viewportSize = Vector2D(0,0);
 
 	//input buffers
 	const int KEYBUFFERSIZE = SDL_NUM_SCANCODES;
@@ -25,10 +28,7 @@ private:
 	bool mouseButtonsReleased[4] = { false };
 
 public:
-	
-
-
-	SceneTree(Node* mainScene, SDL_Renderer* renderer, std::string basePath = SDL_GetBasePath());
+	SceneTree(Node* mainScene, SDL_Renderer* renderer, Vector2D viewportSize, std::string basePath = SDL_GetBasePath());
 	Node* getRoot();
 	SDL_Renderer* getRenderer();
 	std::string getBasePath();
@@ -42,9 +42,12 @@ public:
 	List<Node*>* getQueuedForDeletion();
 
 	void changeScene(Node* newScene);
+	void setCurrentScene();
 	Node* getCurrentScene();
+	bool requestedSceneChange();
 
 	Vector2D getRenderScale();
+	Vector2D getViewportSize();
 
 	void handleInput(SDL_Event& event);
 

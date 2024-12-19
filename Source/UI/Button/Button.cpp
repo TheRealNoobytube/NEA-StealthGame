@@ -1,17 +1,28 @@
 #include "Button.h"
 
-Button::Button(std::string name) : Node2D(name) {
+Button::Button(std::string text, std::string name) : Node2D(name) {
+	setText(text);
 	addChild(&label);
+	
 }
 
 void Button::ready(){
 	__super::ready();
-	//position = Vector2D(100, 100);
 
-	label.setFont(getSceneTree()->getBasePath() + "..\\Fonts\\OpenSans-VariableFont_wdth,wght.ttf");
-	label.text = "Button";
-	label.position.x = 10;
-	label.position.y = 10;
+	std::cout << "Button";
+
+	if (currentTexture == nullptr) {
+		normalTexture = new Texture(getSceneTree()->getRenderer(), getSceneTree()->getBasePath() + "..\\Assets\\Button\\ButtonNormal.png");
+		hoverTexture = new Texture(getSceneTree()->getRenderer(), getSceneTree()->getBasePath() + "..\\Assets\\Button\\ButtonHover.png");
+		pressedTexture = new Texture(getSceneTree()->getRenderer(), getSceneTree()->getBasePath() + "..\\Assets\\Button\\ButtonPressed.png");
+		currentTexture = normalTexture;
+	}
+
+
+	//label.setFont(getSceneTree()->getBasePath() + "..\\Fonts\\OpenSans-VariableFont_wdth,wght.ttf");
+
+
+
 }
 
 void Button::update(float delta){
@@ -22,6 +33,8 @@ void Button::update(float delta){
 		}
 		pressed = false;
 	}
+
+	
 
 	//finds if the mouse is hovering in the bounds of the button
 	Vector2D mousePos = getMousePosition();
@@ -54,9 +67,11 @@ void Button::update(float delta){
 
 		if (pressed) {
 			currentColor = pressColor;
+			currentTexture = pressedTexture;
 		}
 		else {
 			currentColor = hoverColor;
+			currentTexture = hoverTexture;
 		}
 	}
 	else {
@@ -65,15 +80,24 @@ void Button::update(float delta){
 			isMouseInside = true;
 		}
 		currentColor = normalColor;
+		currentTexture = normalTexture;
 	}
+	label.position.x = (size.x / 2) - (label.getTextSize().x / 2); //aligns text to the center of the button
+	label.position.y = (size.y / 2) - (label.getTextSize().y / 2);
 
-	drawRect(position, size, currentColor);
+	if (useTextures) {
+		currentTexture->draw(position.x, position.y, scale.x, scale.y);
+	}
+	else {
+		drawRect(position, size, currentColor);
+	}
 }
 
 
 
 void Button::onClick() {
 	std::cout << "click" << "\n";
+	this->on_click.emit();
 }
 
 void Button::onMouseEnter() {
@@ -88,12 +112,32 @@ void Button::onMouseExit() {
 	std::cout << "Mouse exited" << "\n";
 }
 
+Vector2D Button::getSize() {
+	return this->size;
+}
+
+void Button::setSize(Vector2D size) {
+	if (size.x <= 0 || size.y <= 0) {
+		this->size = Vector2D(1, 1);
+	}
+	else {
+		this->size = size;
+	}
+}
+
 void Button::setText(std::string text) {
-	std::cout << "text";
 	this->label.text = text;
-	std::cout << "text";
+
 }
 
 std::string Button::getText() {
 	return this->label.text;
 }
+
+void Button::setAntiAliasing(bool antiAliasing) {
+	this->label.antiAliasing = true;
+}
+bool Button::antiAliasingEnabled() {
+	return this->label.antiAliasing;
+}
+

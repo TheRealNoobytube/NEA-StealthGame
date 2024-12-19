@@ -128,3 +128,7 @@ SDL_Renderer* Application::getRenderer() {
 SDL_Window* Application::getWindow() {
     return this->window;
 }
+
+Vector2D Application::getViewportSize() {
+    return Vector2D(viewportWidth, viewportHeight);
+}
