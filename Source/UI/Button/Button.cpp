@@ -9,33 +9,26 @@ Button::Button(std::string text, std::string name) : Node2D(name) {
 void Button::ready(){
 	__super::ready();
 
-	std::cout << "Button";
-
-	if (currentTexture == nullptr) {
-		normalTexture = new Texture(getSceneTree()->getRenderer(), getSceneTree()->getBasePath() + "..\\Assets\\Button\\ButtonNormal.png");
-		hoverTexture = new Texture(getSceneTree()->getRenderer(), getSceneTree()->getBasePath() + "..\\Assets\\Button\\ButtonHover.png");
-		pressedTexture = new Texture(getSceneTree()->getRenderer(), getSceneTree()->getBasePath() + "..\\Assets\\Button\\ButtonPressed.png");
-		currentTexture = normalTexture;
-	}
-
-
-	//label.setFont(getSceneTree()->getBasePath() + "..\\Fonts\\OpenSans-VariableFont_wdth,wght.ttf");
-
-
-
+	setNormalTexture(getSceneTree()->getBasePath() + "..\\Assets\\Button\\ButtonNormal.png");
+	setHoverTexture(getSceneTree()->getBasePath() + "..\\Assets\\Button\\ButtonHover.png");
+	setPressTexture(getSceneTree()->getBasePath() + "..\\Assets\\Button\\ButtonPressed.png");
+	currentTexture = normalTexture;
+	
 }
 
 void Button::update(float delta){
 	__super::update(delta);
 	if (isMouseButtonReleased(SDL_BUTTON_LEFT)) {
 		if (isMouseInside && pressed) {
-			onClick();
+			if (isClickedWhenLetGo) {
+				onClick();
+			}
+			onRelease();
 		}
 		pressed = false;
 	}
 
 	
-
 	//finds if the mouse is hovering in the bounds of the button
 	Vector2D mousePos = getMousePosition();
 	Vector2D renderScale = getSceneTree()->getRenderScale();
@@ -44,10 +37,10 @@ void Button::update(float delta){
 	bool yAlign = false;
 
 	//multiply by render scale because otherwise only the original bounds of the button will be checked
-	if (mousePos.x >= position.x * renderScale.x && mousePos.x <= (position.x + size.x) * renderScale.x) {
+	if (mousePos.x >= getGlobalPosition().x * renderScale.x && mousePos.x <= (getGlobalPosition().x + size.x) * renderScale.x) {
 		xAlign = true;
 	}
-	if (mousePos.y >= position.y * renderScale.y && mousePos.y <= (position.y + size.y) * renderScale.y) {
+	if (mousePos.y >= getGlobalPosition().y * renderScale.y && mousePos.y <= (getGlobalPosition().y + size.y) * renderScale.y) {
 		yAlign = true;
 	}
 
@@ -62,6 +55,9 @@ void Button::update(float delta){
 
 
 		if (isMouseButtonJustPressed(SDL_BUTTON_LEFT)) {
+			if (!pressed && !isClickedWhenLetGo) {
+				onClick();
+			}
 			pressed = true;
 		}
 
@@ -79,29 +75,34 @@ void Button::update(float delta){
 			onMouseEnter();
 			isMouseInside = true;
 		}
-		currentColor = normalColor;
-		currentTexture = normalTexture;
+		if (!pressed) {
+			currentColor = normalColor;
+			currentTexture = normalTexture;
+		}
 	}
 	label.position.x = (size.x / 2) - (label.getTextSize().x / 2); //aligns text to the center of the button
 	label.position.y = (size.y / 2) - (label.getTextSize().y / 2);
 
 	if (useTextures) {
-		currentTexture->draw(position.x, position.y, scale.x, scale.y);
+		currentTexture.draw(getGlobalPosition(), scale, size);
 	}
 	else {
-		drawRect(position, size, currentColor);
+		drawRect(getGlobalPosition(), size, currentColor);
 	}
 }
 
 
 
 void Button::onClick() {
-	std::cout << "click" << "\n";
 	this->on_click.emit();
 }
 
+void  Button::onRelease() {
+	this->on_release.emit();
+}
+
 void Button::onMouseEnter() {
-	std::cout << "Mouse entered" << "\n";
+	on_mouse_enter.emit();
 }
 
 void Button::mouseInside() {
@@ -109,7 +110,7 @@ void Button::mouseInside() {
 }
 
 void Button::onMouseExit() {
-	std::cout << "Mouse exited" << "\n";
+	on_mouse_exit.emit();
 }
 
 Vector2D Button::getSize() {
@@ -117,12 +118,8 @@ Vector2D Button::getSize() {
 }
 
 void Button::setSize(Vector2D size) {
-	if (size.x <= 0 || size.y <= 0) {
-		this->size = Vector2D(1, 1);
-	}
-	else {
-		this->size = size;
-	}
+	this->size.x = std::clamp(size.x, 1.0f, INFINITY);
+	this->size.y = std::clamp(size.y, 1.0f, INFINITY);
 }
 
 void Button::setText(std::string text) {
@@ -141,3 +138,16 @@ bool Button::antiAliasingEnabled() {
 	return this->label.antiAliasing;
 }
 
+bool Button::isPressed() {
+	return this->pressed;
+}
+
+void Button::setNormalTexture(std::string filePath) {
+	normalTexture.setTexture(filePath);
+}
+void Button::setHoverTexture(std::string filePath) {
+	hoverTexture.setTexture(filePath);
+}
+void Button::setPressTexture(std::string filePath) {
+	pressedTexture.setTexture(filePath);
+}

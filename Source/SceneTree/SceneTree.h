@@ -36,10 +36,9 @@ public:
 	void readyNodes(Node* current);
 	void updateNodes(Node* current, float delta);
 	void physicsUpdateNodes(Node* current, float fixedDelta);
-	void freeNodes(Node* current);
-
-	void addToQueueForDeletion(Node* node);
-	List<Node*>* getQueuedForDeletion();
+	
+	void enqueueForDeletion(Node* node);
+	void freeNodes();
 
 	void changeScene(Node* newScene);
 	void setCurrentScene();

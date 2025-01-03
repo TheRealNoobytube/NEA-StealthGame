@@ -4,11 +4,8 @@
 
 class AboutMenu : public Node2D{
 private:
-	Label aboutText = Label("This is a game about stealth\nYeag");
+	Label aboutText = Label();
 	Button backButton = Button("Back");
-
-	Texture* frame;
-	IMG_Animation* animation;
 
 public:
 	Node* lastScene;

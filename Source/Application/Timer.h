@@ -1,6 +1,7 @@
 #pragma once
 #include <chrono>
 
+using TimePoint = std::chrono::time_point<std::chrono::steady_clock>;
 
 class Timer {
 public:
@@ -13,9 +14,16 @@ public:
     float getTime_Milli();
     float getTime_Seconds();
 
+    bool isRunning();
+    bool isPaused();
+    bool isStopped();
+
+    
+
 private:
-    std::chrono::time_point<std::chrono::steady_clock> startTime;
-    std::chrono::time_point<std::chrono::steady_clock> endTime;
+    
+    TimePoint startTime;
+    TimePoint endTime;
     bool running = false;
     bool paused = false;
 };

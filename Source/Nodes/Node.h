@@ -4,6 +4,7 @@
 #include "Source/Application/Vector2D.h"
 #include "Source/Application/Signal.h"
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 
@@ -26,12 +27,13 @@ private:
 
 	std::string name;
 
-	bool isReady = false;
+	bool readied = false;
 
 public:
 	int id;
 
 	Node(std::string name = "Node");
+	virtual ~Node();
 
 	virtual void ready();
 	virtual void update(float delta);
@@ -39,6 +41,9 @@ public:
 
 	void sceneTreeEntered(SceneTree* sceneTree);
 	void sceneTreeExited();
+	void requestReady();
+
+	bool isReady();
 
 	bool hasChild(std::string name);
 	bool hasChild(Node* node);

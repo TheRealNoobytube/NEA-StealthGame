@@ -6,13 +6,13 @@ MainMenu::MainMenu(std::string name) : Node2D(name) {
 	addChild(&settingsButton);
 	addChild(&aboutButton);
 	addChild(&quitButton);
-
 }
 
 void MainMenu::ready() {
 	__super::ready();
 
 	aboutMenuScene.lastScene = this;
+	settingsMenuScene.lastScene = this;
 
 	Vector2D viewportSize = getSceneTree()->getViewportSize();
 	titleText.setTextWrapLength(600);
@@ -43,11 +43,13 @@ void MainMenu::ready() {
 
 
 void MainMenu::onStartButtonClick() {
-
+	TestScene* testScene = new TestScene();
+	getSceneTree()->changeScene(testScene);
+	queueFree();
 }
 
 void MainMenu::onSettingsButtonClick() {
-
+	getSceneTree()->changeScene(&settingsMenuScene);
 }
 
 void MainMenu::onAboutButtonClick() {

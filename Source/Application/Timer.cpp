@@ -45,3 +45,12 @@ float Timer::getTime_Seconds() {
     return getTime_Nano() / 1000000000.0;
 }
 
+bool Timer::isRunning() {
+    return running;
+}
+bool Timer::isPaused() {
+    return paused;
+}
+bool Timer::isStopped() {
+    return !isRunning() && !isPaused();
+}

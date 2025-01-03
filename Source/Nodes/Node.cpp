@@ -8,6 +8,8 @@ Node::Node(std::string name) {
 	this->sceneTree = nullptr;
 }
 
+Node::~Node() {} //allows objects that derive from Node to have their own destructor called instead
+
 //method for adding children
 
 void Node::addChild(Node* node) {
@@ -61,7 +63,13 @@ void Node::sceneTreeExited() { //pre-order depth first traversal
 	}
 }
 
+void Node::requestReady() {
+	readied = false;
+}
 
+bool Node::isReady() {
+	return readied;
+}
 
 
 bool Node::hasChild(std::string name) {
@@ -128,10 +136,7 @@ void Node::setSceneTree(SceneTree* sceneTree) {
 }
 
 void Node::ready() {
-	if (isReady) {
-		return;
-	}
-	isReady = true;
+	readied = true;
 	//std::cout << "ready " << name << "\n";
 }
 void Node::update(float delta) {
@@ -143,10 +148,7 @@ void Node::physicsUpdate(float fixedDelta) {
 
 
 void Node::queueFree() {
-	if (getParent() != nullptr) {
-		getParent()->removeChild(this);
-	}
-	getSceneTree()->addToQueueForDeletion(this);
+	getSceneTree()->enqueueForDeletion(this);
 }
 
 

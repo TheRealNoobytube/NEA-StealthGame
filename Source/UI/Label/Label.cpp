@@ -13,7 +13,6 @@ Label::~Label() {
 	this->text = text;
 	TTF_CloseFont(this->font);
 	delete fontTexture;
-	
 }
 
 void Label::setFont(std::string filepath) {
@@ -50,7 +49,7 @@ void Label::renderText() {
 	generateTextSurface();
 
 	delete this->fontTexture; //delete the previous texture, replace it with the new one below
-	this->fontTexture = new Texture(getSceneTree()->getRenderer(), textSurface);
+	this->fontTexture = new Texture(textSurface);
 
 	Vector2D globalPos = getGlobalPosition();
 	this->fontTexture->draw(globalPos.x, globalPos.y, scale.x, scale.y);

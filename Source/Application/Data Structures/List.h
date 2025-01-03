@@ -4,14 +4,15 @@
 #include <iostream>
 
 //no cpp file because template classes are difficult to create when the class is split into two files
-//sacrifices organization and c++ intellisense in order to minimize headaches trying to find an elegant solution
 
 template <typename T>
 
 class List {
 public:
+
 	List(int initialSize = 2) {
 		
+		this->size = 0;
 		this->maxSize = initialSize;
 		this->array = new T[maxSize];
 	}
@@ -42,14 +43,14 @@ public:
 		}
 
 		T temp = this->array[index];
-		this->array[index] = NULL;
+		this->array[index] = nullptr;
 		size--;
 
-		//cleans array by preventing any NULL values between elements, so all elements are contiguous
+		//cleans array by preventing any nullptr values between elements, so all elements are contiguous
 		for (int i = index + 1; i < maxSize; i++) {
-			if (this->array[i] != NULL) {
+			if (isNullptr(this->array[i])) {
 				T temp = this->array[i];
-				this->array[i] = NULL;
+				this->array[i] = nullptr;
 				this->array[i - 1] = temp;
 			}
 		}
@@ -71,6 +72,7 @@ public:
 				return i;
 			}
 		}
+
 		return -1; //if the thing we're looking for isn't inside the list
 	}
 
@@ -96,6 +98,7 @@ public:
 		delete[] this->array;
 		this->maxSize = 2;
 		this->array = new T[maxSize];
+		this->size = 0;
 	}
 
 	bool isEmpty() {
@@ -138,6 +141,17 @@ private:
 		maxSize = size;
 	}
 
+
+	//cant check if a value in the array is nullptr because no all Lists will have a pointer template
+	//so instead we use helper functions. if the value isn't a pointer, then that means the value still exists, and therefore always return false
+	//in c++, any objecty that isn't a nullptr has a boolean value of true, so we can just return the inverse of the object to give the appropriate value 
+	bool isNullptr(T* item) {
+		return !item;
+	}
+
+	bool isNullptr(T item) {
+		return false;
+	}
 	
 
 };

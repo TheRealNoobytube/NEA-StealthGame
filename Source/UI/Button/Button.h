@@ -15,25 +15,30 @@ private:
 	Color hoverColor = Color(73, 88, 147);
 	Color currentColor = normalColor;
 
-	Texture* normalTexture;
-	Texture* hoverTexture;
-	Texture* pressedTexture;
-	Texture* currentTexture = nullptr;
+	Texture normalTexture = Texture();
+	Texture hoverTexture = Texture();
+	Texture pressedTexture = Texture();
+	Texture currentTexture;
 
 	bool useTextures = true;
 	bool isMouseInside = false;
 	bool pressed = false;
 
-
 public:
+	bool isClickedWhenLetGo = true;
+
 	Button(std::string text = " ", std::string name = "Button");
 
 	Signal<> on_click;
+	Signal<> on_release;
+	Signal<> on_mouse_enter;
+	Signal<> on_mouse_exit;
 
 	void ready() override;
 	void update(float delta) override;
 
 	void onClick();
+	void onRelease();
 	void onMouseEnter();
 	void mouseInside();
 	void onMouseExit();
@@ -45,4 +50,9 @@ public:
 	std::string getText();
 	void setAntiAliasing(bool antiAliasing);
 	bool antiAliasingEnabled();
+	bool isPressed();
+
+	void setNormalTexture(std::string filePath);
+	void setHoverTexture(std::string filePath);
+	void setPressTexture(std::string filePath);
 };

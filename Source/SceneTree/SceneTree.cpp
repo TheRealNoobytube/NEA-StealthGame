@@ -1,5 +1,6 @@
 #include "SceneTree.h"
 
+
 SceneTree::SceneTree(Node* mainScene, SDL_Renderer* renderer, Vector2D viewportSize, std::string basePath) {
 	this->root = new Node("Root");
 	this->currentScene = mainScene;
@@ -10,7 +11,6 @@ SceneTree::SceneTree(Node* mainScene, SDL_Renderer* renderer, Vector2D viewportS
 	root->setSceneTree(this); //root doesn't have any parents because its at the top of the tree, so we don't need to set its parent here
 	root->addChild(currentScene);
 	root->ready();
-
 }
 
 
@@ -31,7 +31,10 @@ void SceneTree::readyNodes(Node* current) { //post-order depth first traversal -
 	for (int i = 0; i < current->getChildCount(); i++) {
 		readyNodes(current->getChild(i));
 	}
-	current->ready();
+
+	if (!current->isReady()) {
+		current->ready();
+	}
 }
 
 void SceneTree::updateNodes(Node* current, float delta) { //pre-order depth first traversal - more intuitive since nodes
@@ -70,21 +73,28 @@ Node* SceneTree::getCurrentScene() {
 	return this->currentScene;
 }
 
-void SceneTree::addToQueueForDeletion(Node* node) {
+void SceneTree::enqueueForDeletion(Node* node) {
 	if (this->queuedForDeletion.find(node) == -1) { //dont want to delete the same node more than once
 		this->queuedForDeletion.add(node);
 	}
 }
 
-List<Node*>* SceneTree::getQueuedForDeletion() {
-	return &queuedForDeletion;
-}
+void SceneTree::freeNodes() {
+	if (!queuedForDeletion.isEmpty()) {
 
-void SceneTree::freeNodes(Node* current) {
-	for (int i = 0; i < current->getChildCount(); i++) {
-		freeNodes(current->getChild(i));
+		for (int i = 0; i < queuedForDeletion.getSize(); i++) {
+			Node* current = queuedForDeletion.get(i);
+			if (current->getParent() != nullptr) {
+				current->getParent()->removeChild(current);
+			}
+
+			if (current != nullptr) {
+				delete current;
+				current = nullptr;
+			}
+		}
+		queuedForDeletion.clear();
 	}
-	delete current;
 }
 
 Vector2D SceneTree::getRenderScale() {

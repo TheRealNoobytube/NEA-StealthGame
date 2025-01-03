@@ -2,6 +2,9 @@
 #include "Source/Nodes/Node2D/Node2D.h"
 #include "Source/UI/Button/Button.h"
 #include "Source/Scenes/Menus/AboutMenu/AboutMenu.h"
+#include "Source/Scenes/Menus/SettingsMenu/SettingsMenu.h"
+#include "Source/Scenes/TestScene.h"
+
 
 class MainMenu : public Node2D {
 private:
@@ -12,6 +15,7 @@ private:
 	Button quitButton = Button("Quit");
 
 	AboutMenu aboutMenuScene;
+	SettingsMenu settingsMenuScene;
 
 public:
 	MainMenu(std::string name = "MainMenu");
