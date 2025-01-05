@@ -10,16 +10,57 @@ template <typename T>
 class List {
 public:
 
-	List(int initialSize = 2) {
-		
+	//basic constructor
+	List() {
 		this->size = 0;
-		this->maxSize = initialSize;
+		this->maxSize = 2;
 		this->array = new T[maxSize];
 	}
+
+	//constructor used to pass in all the elements on initialization
+	template <typename... Args>
+	List(Args... args) {
+		this->size = 0;
+		this->maxSize = 2;
+		this->array = new T[maxSize];
+		
+		T temp[] = { (std::forward<Args>(args))... }; //used this to put all the arguments inside an array
+
+		for (T item : temp) {
+			add(item); //add through the add function which automatically updates the size of the array
+		}
+	}
 	
+	//copy constructor when list gets passed in by value in a function
+	List(const List& list) { 
+		this->size = list.size;;
+		this->maxSize = list.maxSize;
+		this->array = new T[list.maxSize];
+
+		for (int i = 0; i < list.size; i++) {
+			this->array[i] = list.array[i];
+		}
+	}
+
+	//destructor to delete the contents of the array, preventing memory leaks
 	~List() {
 		delete[] this->array;
 	}
+
+	List& operator=(const List& list) {
+		if (this->array != nullptr) {
+			delete[] this->array;
+		}
+		this->array = new T[list.maxSize];
+
+		for (int i = 0; i < list.size; i++) {
+			add(list.array[i]);
+		}
+
+		return *this;
+
+	}
+
 
 	//needed to add elements to the private array. when too many elements are in the array, we grow the array
 	void add(T element) {
@@ -74,6 +115,15 @@ public:
 		}
 
 		return -1; //if the thing we're looking for isn't inside the list
+	}
+
+	void set(int index, T item) {
+		if (index >= size) {
+			std::cout << "INDEX " << index << " OUT OF RANGE";
+			throw std::out_of_range("tried to get element out of bounds");
+		}
+
+		this->array[index] = item;
 	}
 
 	T get(int index) {

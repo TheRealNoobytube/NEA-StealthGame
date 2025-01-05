@@ -3,6 +3,9 @@
 
 class TimerNode : public Node {
 public:
+	Signal<> timeout;
+	bool loop = false;
+
 	TimerNode(std::string name = "TimerNode");
 	
 	void ready() override;
@@ -26,8 +29,4 @@ private:
 
 	bool paused = false;
 	bool running = false;
-	bool loop = false;
-
-
-
 };

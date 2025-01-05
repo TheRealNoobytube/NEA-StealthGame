@@ -1,11 +1,9 @@
 #pragma once
-#include "Source/Nodes/Sprite/Sprite.h"
-#include "Source/Nodes/AnimationPlayer/AnimationPlayer.h"
+#include "Source/Nodes/AnimatedSprite/AnimatedSprite.h"
 
 class Player : public Node2D {
 private:
-	Sprite sprite;
-	AnimationPlayer animations;
+	AnimatedSprite sprite;
 
 	int animationTimer = 0;
 	int fps = 12;
