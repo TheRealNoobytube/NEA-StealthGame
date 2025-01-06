@@ -63,12 +63,29 @@ void AnimatedSprite::play(std::string name, bool restart) {
 
 void AnimatedSprite::setFps(int fps) {
 	this->fps = fps;
-	animationTimer.setLength(1.0 / (float)fps);
+	animationTimer.setLength(1.0 / ((float)fps * speedScale));
 }
 
 int AnimatedSprite::getFps() {
 	return this->fps;
 }
+
+void AnimatedSprite::setSpeedScale(float speedScale) {
+	if (speedScale == this->speedScale) {
+		return;
+	}
+
+	if (speedScale <= 0) {
+		speedScale = 0.1;
+	}
+	this->speedScale = speedScale;
+	setFps(getFps());
+}
+
+float AnimatedSprite::getSpeedScale() {
+	return this->speedScale;
+}
+
 
 
 void AnimatedSprite::animationTimerTimeout() {

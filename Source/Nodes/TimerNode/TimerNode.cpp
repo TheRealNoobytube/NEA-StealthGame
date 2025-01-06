@@ -7,10 +7,12 @@ TimerNode::TimerNode(std::string name) : Node(name) {
 }
 
 void TimerNode::ready() {
-
+	__super::ready();
 }
 
 void TimerNode::update(float delta) {
+	__super::update(delta);
+
 	if (running) {
 		currentTime += delta; //this is how the timer progresses
 
@@ -34,8 +36,6 @@ void TimerNode::update(float delta) {
 			}
 		}
 	}
-
-
 }
 
 void TimerNode::start(float time) {

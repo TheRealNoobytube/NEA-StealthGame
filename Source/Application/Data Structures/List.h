@@ -48,10 +48,7 @@ public:
 	}
 
 	List& operator=(const List& list) {
-		if (this->array != nullptr) {
-			delete[] this->array;
-		}
-		this->array = new T[list.maxSize];
+		clear();
 
 		for (int i = 0; i < list.size; i++) {
 			add(list.array[i]);

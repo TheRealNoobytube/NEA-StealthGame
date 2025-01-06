@@ -24,6 +24,7 @@ private:
 	List<Animation> animations;
 
 	bool loop = false;
+	float speedScale = 1;
 	int fps = 10;
 	int currentAnimationIndex;
 	int currentFrameIndex;
@@ -45,6 +46,9 @@ public:
 
 	void setFps(int fps);
 	int getFps();
+
+	void setSpeedScale(float speedScale);
+	float getSpeedScale();
 
 	int findAnimationIndex(std::string name);
 

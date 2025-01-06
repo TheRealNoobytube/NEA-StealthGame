@@ -1,13 +1,20 @@
 #pragma once
 #include "Source/Nodes/AnimatedSprite/AnimatedSprite.h"
+#include "Source/Collision/CollisionBody.h"
+#include "Source/Collision/CollisionShapes/CollisionRect.h"
+#include "Source/Components/Movement/MovementComponent.h"
 
-class Player : public Node2D {
+class Player : public CollisionBody {
 private:
 	AnimatedSprite sprite;
+	CollisionRect collisionRect;
+	MovementComponent movement;
 
 	int animationTimer = 0;
 	int fps = 12;
 	int walkingFrame = 1;
+
+	float speed = 1;
 
 	enum WalkingDirection {
 		WALKING_RIGHT,
@@ -28,9 +35,6 @@ public:
 	Player(std::string name = "Player");
 
 	//direction is a unit vector, meaning its magnitude will always be 1 or -1
-	Vector2D direction = Vector2D(0, 0);
-	Vector2D velocity = Vector2D(0, 0);
-	float speed = 1;
 
 	void ready() override;
 	void update(float delta) override;
