@@ -14,9 +14,6 @@ private:
 	Button aboutButton = Button("About");
 	Button quitButton = Button("Quit");
 
-	AboutMenu aboutMenuScene;
-	SettingsMenu settingsMenuScene;
-
 public:
 	MainMenu(std::string name = "MainMenu");
 

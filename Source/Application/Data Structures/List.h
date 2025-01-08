@@ -17,7 +17,7 @@ public:
 		this->array = new T[maxSize];
 	}
 
-	//constructor used to pass in all the elements on initialization
+	//constructor used to pass elements on initialization
 	template <typename... Args>
 	List(Args... args) {
 		this->size = 0;

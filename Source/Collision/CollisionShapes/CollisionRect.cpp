@@ -11,7 +11,7 @@ void CollisionRect::ready() {
 
 void CollisionRect::update(float delta) {
 	__super::update(delta);
-	if (showCollisionShapes) {
+	if (visible) {
 		drawRect(getGlobalPosition(), size, Color(255, 0, 0));
 	}
 }

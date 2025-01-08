@@ -20,10 +20,8 @@ Texture::Texture(std::string texturePath) {
 }
 
 Texture::~Texture() {
-	if (this->texture != nullptr) {
-		SDL_DestroyTexture(this->texture); //have to destroy the SDL_Texture otherwise it will stay allocated in memory
+	SDL_DestroyTexture(this->texture); //have to destroy the SDL_Texture otherwise it will stay allocated in memory
 										   //even if we delete this Texture class
-	}
 }
 
 void Texture::draw(Vector2D position, Vector2D scale , Vector2D bounds , Vector2D start, Vector2D size, SDL_RendererFlip flip) {

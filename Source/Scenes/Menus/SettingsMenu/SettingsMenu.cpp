@@ -43,5 +43,6 @@ void SettingsMenu::update(float delta) {
 }
 
 void SettingsMenu::onBackButtonClick() {
+	queueFree();
 	getSceneTree()->changeScene(lastScene);
 }

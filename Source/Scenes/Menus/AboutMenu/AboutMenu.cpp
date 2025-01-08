@@ -41,6 +41,7 @@ void AboutMenu::ready() {
 }
 
 void AboutMenu::onBackButtonClick() {
+	queueFree();
 	getSceneTree()->changeScene(lastScene);
 }
 

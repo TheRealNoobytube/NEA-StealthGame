@@ -1,17 +1,11 @@
 #pragma once
 #include "Source/Entities/Entity.h"
 
-class Player : public Entity {
-private:
+class Enemy : public Entity {
+public:
 	AnimatedSprite sprite;
-	CollisionRect collisionRect;
 	MovementComponent movement = MovementComponent(this);
-
-	float speed = 1;
-
-	int animationTimer = 0;
-	int fps = 12;
-	int walkingFrame = 1;
+	CollisionRect collision;
 
 	enum WalkingDirection {
 		WALKING_RIGHT,
@@ -26,16 +20,12 @@ private:
 
 	WalkingDirection walkDirection = WALKING_UP;
 
+	float speed = 1;
 	bool walking = false;
 
-public:
-	Player(std::string name = "Player");
-
-	//direction is a unit vector, meaning its magnitude will always be 1 or -1
+	Enemy(std::string name = "Enemy");
 
 	void ready() override;
 	void update(float delta) override;
 	void physicsUpdate(float delta) override;
-
 };
-

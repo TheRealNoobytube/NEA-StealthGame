@@ -11,7 +11,7 @@ public:
 
 	CollisionBody* detectCollisions(CollisionBody* body);
 	bool rect_rectIsColliding(CollisionRect* shape);
-	bool showCollisionShapes = true;
+	bool visible = true;
 
 	void setSize(Vector2D size);
 	Vector2D getSize();

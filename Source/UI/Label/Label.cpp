@@ -10,7 +10,7 @@ Label::Label(std::string text, std::string name) : Node2D(name) {
 }
 
 Label::~Label() {
-	this->text = text;
+	SDL_FreeSurface(textSurface);
 	TTF_CloseFont(this->font);
 	delete fontTexture;
 }

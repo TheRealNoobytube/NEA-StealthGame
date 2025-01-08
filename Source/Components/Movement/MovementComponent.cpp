@@ -1,7 +1,7 @@
 #include "MovementComponent.h"
 
-MovementComponent::MovementComponent(std::string name) : Node(name) {
-
+MovementComponent::MovementComponent(Entity* entity, std::string name) : Node(name) {
+	this->entity = entity;
 }
 
 bool MovementComponent::applyVelocity() {
