@@ -1,6 +1,7 @@
 #include "TestScene.h"
 
-TestScene::TestScene(std::string name) : Node2D(name){
+TestScene::TestScene(std::string name) : Level(name){
+	addChild(&navMesh);
 	addChild(&body);
 	addChild(&body2);
 	addChild(&buttonBody);
@@ -11,11 +12,11 @@ TestScene::TestScene(std::string name) : Node2D(name){
 	body.addChild(&shape);
 	body2.addChild(&shape2);
 	buttonBody.addChild(&shape3);
+
 }
 
 
 void TestScene::ready() {
-	__super::ready();
 
 	player.position = Vector2D(120, 90);
 	enemy.position = Vector2D(70, 30);
@@ -34,6 +35,8 @@ void TestScene::ready() {
 	shape3.position.y = getSceneTree()->getViewportSize().y - shape3.getSize().y - 6;
 
 	backButton.on_click.connect([this]() { onBackButtonPressed(); });
+
+	__super::ready();
 }
 
 void TestScene::onBackButtonPressed() {

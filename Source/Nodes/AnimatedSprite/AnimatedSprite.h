@@ -10,7 +10,6 @@ private:
 		int fps;
 		bool loop;
 
-
 		Animation() {}
 
 		Animation(std::string name, List<int> frames, int fps, bool loop) {

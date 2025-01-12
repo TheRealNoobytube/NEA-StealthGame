@@ -42,9 +42,9 @@ void Enemy::update(float delta) {
 	__super::update(delta);
 
 
-	movement.direction = Vector2D(cos(theta / 500), sin(theta / 500));
-	movement.velocity.x = speed * movement.direction.x;
-	movement.velocity.y = speed * movement.direction.y;
+	//movement.direction = Vector2D(cos(theta / 500), sin(theta / 500));
+	//movement.velocity.x = speed * movement.direction.x;
+	//movement.velocity.y = speed * movement.direction.y;
 
 	theta++;
 
