@@ -7,8 +7,6 @@ private:
 	CollisionRect collisionRect;
 	MovementComponent movement = MovementComponent(this);
 
-	float speed = 1;
-
 	int animationTimer = 0;
 	int fps = 12;
 	int walkingFrame = 1;

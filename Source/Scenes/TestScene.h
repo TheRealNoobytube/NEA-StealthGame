@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Source/Scenes/Levels/Level.h"
-
-
+#include "Source/Entities/Player/Player.h"
+#include "Source/Entities/Enemy/Enemy.h"
 
 class TestScene : public Level {
 private:
@@ -12,6 +12,9 @@ private:
 	CollisionRect shape2;
 	CollisionBody body;
 	CollisionRect shape;
+
+	CollisionBody body4;
+	CollisionRect shape4;
 
 	CollisionBody buttonBody;
 	CollisionRect shape3;

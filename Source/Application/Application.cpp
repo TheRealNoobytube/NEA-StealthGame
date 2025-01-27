@@ -47,6 +47,8 @@ void Application::launch() {
     applicationUpdate(NANOSECONDSPERFRAME);
     applicationPhysicsUpdate(NANOSECONDSPERFRAME);
 
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
     SDL_Event event;
     SDL_PollEvent(&event);
 

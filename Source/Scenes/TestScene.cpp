@@ -4,6 +4,7 @@ TestScene::TestScene(std::string name) : Level(name){
 	addChild(&navMesh);
 	addChild(&body);
 	addChild(&body2);
+	addChild(&body4);
 	addChild(&buttonBody);
 	addChild(&backButton);
 	addChild(&player);
@@ -11,14 +12,16 @@ TestScene::TestScene(std::string name) : Level(name){
 
 	body.addChild(&shape);
 	body2.addChild(&shape2);
+	body4.addChild(&shape4);
 	buttonBody.addChild(&shape3);
 
+	this->currentPlayer = &this->player;
 }
 
 
 void TestScene::ready() {
 
-	player.position = Vector2D(120, 90);
+	player.position = Vector2D(130, 90);
 	enemy.position = Vector2D(70, 30);
 
 	body.position = Vector2D(40, 40);
@@ -35,6 +38,11 @@ void TestScene::ready() {
 	shape3.position.y = getSceneTree()->getViewportSize().y - shape3.getSize().y - 6;
 
 	backButton.on_click.connect([this]() { onBackButtonPressed(); });
+
+
+	body4.position = Vector2D(20, 60);
+	shape4.setSize(Vector2D(100, 100));
+
 
 	__super::ready();
 }

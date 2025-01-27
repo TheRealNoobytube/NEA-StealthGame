@@ -3,13 +3,32 @@
 Enemy::Enemy(std::string name) : Entity(name){
 	addChild(&sprite);
 	addChild(&collision);
+	addChild(&pathfinding);
+	addChild(&pathTimer);
 }
 
 void Enemy::ready() {
 	__super::ready();
 
+
+	auto level = dynamic_cast<Level*>(getSceneTree()->getCurrentScene());
+
+	if (level != nullptr) {
+		this->player = level->currentPlayer;
+	}
+
+	this->speed = 1;
+
+	pathTimer.setLength(0.5);
+	pathTimer.timeout.connect([this]() { this->onPathTimerTimeout(); });
+	pathTimer.loop = true;
+	pathTimer.start();
+
+
+	sprite.position = Vector2D(-5, -15);
+
 	collision.visible = false;
-	collision.position = Vector2D(4, 8);
+	collision.position = Vector2D(-1, -7);
 	collision.setSize(Vector2D(8, 17));
 
 	sprite.setTexture(getSceneTree()->getBasePath() + "../Assets/Enemies/Enemy.png");
@@ -75,17 +94,43 @@ void Enemy::update(float delta) {
 	else if (movement.direction.x > 0 && movement.direction.y > 0) {
 		walkDirection = WALKING_DOWN_RIGHT;
 	}
+
+
+	auto level = dynamic_cast<Level*>(getSceneTree()->getCurrentScene());
+
+	if (level != nullptr) {
+		Vector2D drawPosition = getGlobalPosition();
+		drawPosition = level->navMesh.globalToMap(drawPosition);
+		drawPosition.x *= level->navMesh.boxSize.x;
+		drawPosition.y *= level->navMesh.boxSize.y;
+
+
+		drawRect(drawPosition, level->navMesh.boxSize, Color(255, 255, 255, 100));
+
+		for (int i = 0; i < pathfinding.currentPath.getSize(); i++) {
+			drawRect(pathfinding.currentPath.get(i), level->navMesh.boxSize, Color(255, 255, 255, 200));
+		}
+
+	}
+
 }
 
 void Enemy::physicsUpdate(float delta) {
 	__super::physicsUpdate(delta);
 
-	if (movement.applyVelocity()) {
-		//sprite.setSpeedScale(0.5);
+	//if (movement.applyVelocity()) {
+	//	//sprite.setSpeedScale(0.5);
+	//}
+	//else {
+	//	//sprite.setSpeedScale(1);
+	//}
+
+	if (!pathfinding.currentPath.isEmpty()) {
+		pathfinding.followPath(*this, movement);
 	}
-	else {
-		//sprite.setSpeedScale(1);
-	}
+
+
+
 
 	std::string state = "Idle";
 	if (walking) {
@@ -116,4 +161,11 @@ void Enemy::physicsUpdate(float delta) {
 		sprite.flipH = false;
 		sprite.play(state + "DownRight"); break;
 	}
+}
+
+
+void Enemy::onPathTimerTimeout() {
+	pathfinding.findPath(getGlobalPosition(), player->getGlobalPosition());
+	std::cout << "new path found\n";
+	//std::cout << pathfinding.currentPath.getSize() << "\n";
 }

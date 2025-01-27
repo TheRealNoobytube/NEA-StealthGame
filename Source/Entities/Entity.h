@@ -4,10 +4,11 @@
 #include "Source/Collision/CollisionBody.h"
 #include "Source/Collision/CollisionShapes/CollisionRect.h"
 #include "Source/Components/Movement/MovementComponent.h"
-
-
+//#include "Source/Pathfinding/Pathfinding.h"
 
 class Entity : public CollisionBody {
 public:
 	Entity(std::string name = "Entity");
+
+	float speed;
 };

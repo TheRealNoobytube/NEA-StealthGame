@@ -1,8 +1,19 @@
 #pragma once
 #include "Source/Entities/Entity.h"
+#include "Source/Pathfinding/Pathfinding.h"
+#include "Source/Entities/Player/Player.h"
 
 class Enemy : public Entity {
 public:
+	Pathfinding pathfinding;
+
+	TimerNode pathTimer;
+
+	void onPathTimerTimeout();
+
+
+	Player* player;
+
 	AnimatedSprite sprite;
 	MovementComponent movement = MovementComponent(this);
 	CollisionRect collision;
@@ -20,7 +31,6 @@ public:
 
 	WalkingDirection walkDirection = WALKING_UP;
 
-	float speed = 1;
 	bool walking = false;
 
 	Enemy(std::string name = "Enemy");

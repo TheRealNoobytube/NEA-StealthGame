@@ -6,16 +6,37 @@ class NavigationMesh : public Node2D{
 public:
 	NavigationMesh(std::string name = "NavigationMesh");
 
-	struct NavigationNode {
+	~NavigationMesh();
 
-		NavigationNode(Vector2D position = Vector2D(0, 0)) : position(position) {}
+	struct AStarNode {
+
+		AStarNode(Vector2D position = Vector2D(0, 0)) : position(position) {}
+
+		~AStarNode() {
+			//std::cout << "DELETED\n";
+		}
+
 		Vector2D position;
-		List<NavigationNode*> neighbors;
+		bool reachable = true;
+		List<AStarNode*> neighbors;
+		AStarNode* connection;
+
 		float gCost = 0;
 		float hCost = 0;
-		float fCost = 0;
-		//Color color = Color((float)(rand()), (float)(rand()), (float)(rand()));
-		Color color = Color(0, 110, 200);
+
+		float getFCost() {
+			return hCost + gCost;
+		}
+
+
+		bool operator == (const AStarNode& node) {
+			return this->position == node.position;
+		}
+
+		bool operator != (const AStarNode& node) {
+			return this->position != node.position;
+		}
+
 	};
 
 	int bakingCollisionLayer = 1;
@@ -23,12 +44,16 @@ public:
 	void ready() override;
 	void update(float delta) override;
 	
+	//void drawSquare(Vector2D pos);
+
 	void bakeMesh();
+	Vector2D globalToMap(Vector2D position);
+
+	List<List<AStarNode>*> map;
+
+	Vector2D boxSize = Vector2D(10, 10);
+	Vector2D size = Vector2D(96 * 8, 96 * 4);
 
 private:
-	List<NavigationNode> map;
-
-	Vector2D boxSize = Vector2D(8, 8);
-	Vector2D size = Vector2D(96 * 2, 96 * 2);
 
 };

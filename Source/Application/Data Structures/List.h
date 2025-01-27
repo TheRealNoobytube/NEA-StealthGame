@@ -23,7 +23,7 @@ public:
 		this->size = 0;
 		this->maxSize = 2;
 		this->array = new T[maxSize];
-		
+
 		T temp[] = { (std::forward<Args>(args))... }; //used this to put all the arguments inside an array
 
 		for (T item : temp) {
@@ -69,10 +69,8 @@ public:
 		size++;
 	}
 
-	T remove() {
-		return remove(size - 1);
-	}
 
+	//for non pointer objects
 	//needed to remove elements from the private array. when the array is bigger than it needs to be, we shrink the array
 	T remove(int index) {
 		if (index > size) {
@@ -81,36 +79,30 @@ public:
 		}
 
 		T temp = this->array[index];
-		this->array[index] = nullptr;
-		size--;
 
-		//cleans array by preventing any nullptr values between elements, so all elements are contiguous
-		for (int i = index + 1; i < maxSize; i++) {
-			if (isNullptr(this->array[i])) {
-				T temp = this->array[i];
-				this->array[i] = nullptr;
-				this->array[i - 1] = temp;
-			}
+		//move all the elements after the one we removed back one index
+		for (int i = index; i < maxSize - 1; i++) {
+			this->array[i] = this->array[i + 1];
 		}
 
+		size--;
 
 		if (size <= maxSize / 2) {
 			if (maxSize > 2) {
 				shrinkArray();
 			}
-			
 		}
 
 		return temp;
 	}
 
+	
 	int find(T criteria) {
 		for (int i = 0; i < size; i++) {
 			if (this->array[i] == criteria) {
 				return i;
 			}
 		}
-
 		return -1; //if the thing we're looking for isn't inside the list
 	}
 
@@ -123,7 +115,7 @@ public:
 		this->array[index] = item;
 	}
 
-	T get(int index) {
+	T& get(int index) {
 		//prevent program from going out of bounds of the array
 		if (index >= size) {
 			std::cout << "INDEX " << index << " OUT OF RANGE";
@@ -154,7 +146,7 @@ public:
 
 private:
 	//dont want to give direct access to the array, could lead to security problems
-	T* array = NULL;
+	T* array = nullptr;
 	int maxSize = 2;
 	int size = 0;
 

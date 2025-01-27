@@ -8,9 +8,12 @@ Player::Player(std::string name) : Entity(name){
 void Player::ready() {
 	__super::ready();
 
-	collisionRect.position = Vector2D(4, 8);
+	this->speed = 3;
+
+	collisionRect.position = Vector2D(-1, -7);
 	collisionRect.setSize(Vector2D(8, 17));
 	collisionRect.visible = false;
+	sprite.position = Vector2D(-5, -15);
 
 	int animationFps = 14;
 
