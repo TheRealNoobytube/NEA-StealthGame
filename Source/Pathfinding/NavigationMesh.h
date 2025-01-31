@@ -13,19 +13,20 @@ public:
 		AStarNode(Vector2D position = Vector2D(0, 0)) : position(position) {}
 
 		~AStarNode() {
-			//std::cout << "DELETED\n";
 		}
 
 		Vector2D position;
 		bool reachable = true;
 		List<AStarNode*> neighbors;
-		AStarNode* connection;
+		AStarNode* connection = nullptr;
 
 		float gCost = 0;
 		float hCost = 0;
+		float weight = 0;
+
 
 		float getFCost() {
-			return hCost + gCost;
+			return hCost + gCost + weight;
 		}
 
 
@@ -48,11 +49,15 @@ public:
 
 	void bakeMesh();
 	Vector2D globalToMap(Vector2D position);
+	Vector2D mapToGlobal(Vector2D position);
+	bool isInvalidMapPosition(Vector2D position);
 
 	List<List<AStarNode>*> map;
 
 	Vector2D boxSize = Vector2D(10, 10);
 	Vector2D size = Vector2D(96 * 8, 96 * 4);
+
+	AStarNode& getNode(Vector2D position);
 
 private:
 

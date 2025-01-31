@@ -166,6 +166,6 @@ void Enemy::physicsUpdate(float delta) {
 
 void Enemy::onPathTimerTimeout() {
 	pathfinding.findPath(getGlobalPosition(), player->getGlobalPosition());
-	std::cout << "new path found\n";
+	std::cout << player->getGlobalPosition().x << " " << player->getGlobalPosition().y << " new path found\n\n";
 	//std::cout << pathfinding.currentPath.getSize() << "\n";
 }

@@ -5,108 +5,111 @@ Pathfinding::Pathfinding(std::string name) : Node2D(name) {
 
 }
 
-
-
-
-void Pathfinding::update(float delta) {
-	__super::update(delta);
-
-	if (!currentPath.isEmpty()) {
-		for (int i = 0; i < currentPath.getSize(); i++) {
-			//drawRect(currentPath.get(i), Vector2D(8, 8), Color(255, 255, 255));
-		}
-	}
-
-}
-
-
-void Pathfinding::findPath(Vector2D startPos, Vector2D targetPos) {
-
+void Pathfinding::ready() {
+	__super::ready();
 	auto level = dynamic_cast<Level*>(getSceneTree()->getCurrentScene());
 
 	if (level == nullptr) {
 		std::cout << "CURRENT SCENE IS NOT A LEVEL, NO NAVMESH AVAILABLE FOR PATHFINDING\n";
+	}
+	else {
+		this->navMesh = &level->navMesh;
+	}
+}
+
+void Pathfinding::update(float delta) {
+	__super::update(delta);
+
+}
+
+void Pathfinding::findPath(Vector2D startPos, Vector2D targetPos) {
+
+	if (navMesh == nullptr) {
 		return;
 	}
 
-	NavigationMesh* navMesh = &level->navMesh;
+	if (navMesh->isInvalidMapPosition(navMesh->globalToMap(targetPos)) || navMesh->isInvalidMapPosition(navMesh->globalToMap(startPos))) {
+		std::cout << "START OR TARGET POSITIONS OUT OF RANGE OF THE NAVIGATION MESH\n";
+		return;
+	}
 
-	startPos = navMesh->globalToMap(startPos);
-	targetPos = navMesh->globalToMap(targetPos);
-	AStarNode startNode = navMesh->map.get(startPos.x)->get(startPos.y);
-	AStarNode targetNode = navMesh->map.get(targetPos.x)->get(targetPos.y);
+	bool targetReachable = false;
+	if (!navMesh->getNode(targetPos).reachable) {
+		for (int i = 0; i < navMesh->getNode(targetPos).neighbors.getSize(); i++) {
+			if (navMesh->getNode(targetPos).neighbors.get(i)->reachable) {
+				targetPos = navMesh->getNode(targetPos).neighbors.get(i)->position;
+				targetReachable = true;
+				break;
+			}
+		}
+	}
+	else {
+		targetReachable = true;
+	}
 
-	List<AStarNode> toSearch;
+	if (!targetReachable) {
+		std::cout << "TARGET IS NOT REACHABLE, CANNOT PATHFIND TO TARGET\n";
+		return;
+	}
+	
+	List<AStarNode> toSearch = { navMesh->getNode(startPos) };
 	List<AStarNode> processed;
 
-	toSearch.add(startNode);
-
-	int currentNodeIndex = 0;
-	AStarNode current = toSearch.get(currentNodeIndex);
-
 	while (!toSearch.isEmpty()) {
-		currentNodeIndex = 0;
-		current = toSearch.get(currentNodeIndex);
-		
-		//std::cout << "searchving\n";
+		int index = 0;
+		AStarNode current = toSearch.get(index);
 
 		for (int i = 1; i < toSearch.getSize(); i++) {
-			AStarNode node = toSearch.get(i);
-			//std::cout << "new node pos " << node.position.x << " " << node.position.y << "\n";
-			if (node.getFCost() < current.getFCost() || (node.getFCost() == current.getFCost() && node.hCost < current.hCost)) {
-				currentNodeIndex = i;
-				current = toSearch.get(i);
+			if (toSearch.get(i).getFCost() < current.getFCost() || toSearch.get(i).getFCost() == current.getFCost() && toSearch.get(i).hCost < current.hCost) {
+				index = i;
+				current = toSearch.get(index);
 			}
 		}
 
-		toSearch.remove(currentNodeIndex);
+		toSearch.remove(index);
 		processed.add(current);
 
-		if (current.position == targetNode.position) {
-			constructPath(new AStarNode(current), startNode);
-			//AStarNode* connection = current.connection;
+		Vector2D targetPosFixedToMap = navMesh->mapToGlobal(navMesh->globalToMap(targetPos));
+
+		if (current.position == targetPosFixedToMap) {
+			constructPath(&navMesh->getNode(current.position), navMesh->getNode(startPos));
 			return;
 		}
-
-		//std::cout << "current pos " << current.position.x << " " << current.position.y << "\n";
-
 
 		for (int i = 0; i < current.neighbors.getSize(); i++) {
 			AStarNode neighbor = *current.neighbors.get(i);
 
-			if (!neighbor.reachable || processed.find(neighbor) != -1) {
+			if (!neighbor.reachable || processed.has(neighbor)) {
 				continue;
 			}
 
-			int newCostToNeighbor = current.gCost + calculateDistance(current.position, neighbor.position);
-			if (newCostToNeighbor < neighbor.gCost || toSearch.find(neighbor) == -1) {
-				neighbor.gCost = newCostToNeighbor;
-				neighbor.hCost = calculateDistance(neighbor.position, targetNode.position);
+			float newCostToNeighbor = current.gCost + calculateDistance(current.position, neighbor.position);
 
-				//std::cout << "neighbor pos " << neighbor->position.x << " " << neighbor->position.y << "\n";
+			if (newCostToNeighbor < neighbor.gCost || !toSearch.has(neighbor)) {
 
-				neighbor.connection = new AStarNode(current);
+				navMesh->getNode(neighbor.position).connection = &navMesh->getNode(current.position);
+				navMesh->getNode(neighbor.position).gCost = newCostToNeighbor;
+				navMesh->getNode(neighbor.position).hCost = calculateDistance(neighbor.position, targetPos);
 
-				if (toSearch.find(neighbor) == -1) {
-					toSearch.add(neighbor);
+				if (!toSearch.has(neighbor)) {
+					toSearch.add(navMesh->getNode(neighbor.position));
 				}
 			}
 		}
 	}
-	constructPath(new AStarNode(current), startNode);
 }
 
 
 float Pathfinding::calculateDistance(Vector2D posOne, Vector2D posTwo) {
-	float x = posTwo.x - posOne.x;
-	float y = posTwo.y - posOne.y;
+	float x = abs(posTwo.x - posOne.x);
+	float y = abs(posTwo.y - posOne.y);
 
-	return (x > y) ? x : y;
+	return (x < y) ? x : y;
 }
 
 
 
-void Pathfinding::constructPath(AStarNode* first, AStarNode& startNode) {
+void Pathfinding::constructPath(AStarNode* first, AStarNode startNode) {
 	AStarNode* currentPathNode = first;
 	List<Vector2D> tempList;
 	currentPath.clear();
@@ -115,15 +118,11 @@ void Pathfinding::constructPath(AStarNode* first, AStarNode& startNode) {
 		tempList.add(currentPathNode->position);
 		AStarNode* lastNode = currentPathNode;
 		currentPathNode = currentPathNode->connection;
-		delete lastNode;
 	}
-	delete currentPathNode;
 
 	for (int i = tempList.getSize() - 1; i >= 0; i--) {
 		currentPath.add(tempList.get(i));
 	}
-
-
 }
 
 

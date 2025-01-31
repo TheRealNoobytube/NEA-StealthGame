@@ -21,7 +21,7 @@ TestScene::TestScene(std::string name) : Level(name){
 
 void TestScene::ready() {
 
-	player.position = Vector2D(130, 90);
+	player.position = Vector2D(170, 90);
 	enemy.position = Vector2D(70, 30);
 
 	body.position = Vector2D(40, 40);
@@ -42,6 +42,10 @@ void TestScene::ready() {
 
 	body4.position = Vector2D(20, 60);
 	shape4.setSize(Vector2D(100, 100));
+
+
+
+	
 
 
 	__super::ready();

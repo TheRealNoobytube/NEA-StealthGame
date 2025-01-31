@@ -144,6 +144,10 @@ public:
 		return size == 0;
 	}
 
+	bool has(T element) {
+		return (find(element) == -1) ? false : true;
+	}
+
 private:
 	//dont want to give direct access to the array, could lead to security problems
 	T* array = nullptr;
@@ -179,6 +183,7 @@ private:
 
 		maxSize = size;
 	}
+
 
 
 	//cant check if a value in the array is nullptr because no all Lists will have a pointer template

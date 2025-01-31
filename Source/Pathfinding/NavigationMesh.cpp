@@ -14,6 +14,7 @@ NavigationMesh::~NavigationMesh() {
 void NavigationMesh::ready() {
 	__super::ready();
 }
+
 void NavigationMesh::update(float delta) {
 	__super::update(delta);
 
@@ -59,15 +60,19 @@ void NavigationMesh::bakeMesh() {
 		for (int y = 0; y < mapSpaceY; y++) {
 			AStarNode node;
 			Vector2D nodePosition = Vector2D(x * boxSize.x, y * boxSize.y);
-
 			node.position = nodePosition;
 
-			tempRect->position = nodePosition;
-			List<CollisionBody*> bodies = tempBody->requestCollisions();
-			if (!bodies.isEmpty()) {
+			if (nodePosition.x == 0 || nodePosition.y == 0) {
 				node.reachable = false;
 			}
-			bodies.clear();
+			else {
+				tempRect->position = nodePosition;
+				List<CollisionBody*> bodies = tempBody->requestCollisions();
+				if (!bodies.isEmpty()) {
+					node.reachable = false;
+				}
+				bodies.clear();
+			}
 
 			map.get(x)->add(node);
 		}
@@ -89,34 +94,17 @@ void NavigationMesh::bakeMesh() {
 					if ((i + x) > 0 && (i + x) < mapSpaceX && (j + y) > 0 && (j + y) < mapSpaceY){
 
 						current.neighbors.add(&map.get(x + i)->get(y + j));
-						
-						//current.neighbors.get(current.neighbors.getSize() - 1)
-
-
-						//std::cout << "current pos " << current.position.x << " " << current.position.y << "\n";
-						//std::cout << "neighbor pos " << current.neighbors.get(current.neighbors.getSize() - 1)->position.x << " " << current.neighbors.get(current.neighbors.getSize() - 1)->position.y << "\n\n";
-
-
 					}
 				}
 			}
-
-			//std::cout << "neighbor count " << current.neighbors.getSize() << "\n";
-
 		}
 	}
-
 }
 
-
-//void NavigationMesh::drawSquare(Vector2D pos) {
-//	Vector2D mapPos = globalToMap(pos);
-//	AStarNode node = map.get(mapPos.x)->get(mapPos.y);
-//
-//	drawRect(node.position, boxSize, Color(255, 255, 255));
-//
-//
-//}
+NavigationMesh::AStarNode& NavigationMesh::getNode(Vector2D position) {
+	position = globalToMap(position);
+	return map.get(position.x)->get(position.y);
+}
 
 
 Vector2D NavigationMesh::globalToMap(Vector2D position) {
@@ -124,4 +112,25 @@ Vector2D NavigationMesh::globalToMap(Vector2D position) {
 	int y = (int)floor(position.y / boxSize.y);
 	
 	return Vector2D(x, y);
+}
+
+Vector2D NavigationMesh::mapToGlobal(Vector2D position) {
+
+	return Vector2D(position.x * boxSize.x, position.y * boxSize.y);
+}
+
+bool NavigationMesh::isInvalidMapPosition(Vector2D position) {
+	if (map.isEmpty()) {
+		return true;
+	}
+
+	if (position.x < 0 || position.y < 0) {
+		return true;
+	}
+
+	if (position.x >= map.getSize() || position.y >= map.get(0)->getSize()) {
+		return true;
+	}
+
+	return false;
 }
