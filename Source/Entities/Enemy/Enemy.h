@@ -5,19 +5,6 @@
 
 class Enemy : public Entity {
 public:
-	Pathfinding pathfinding;
-
-	TimerNode pathTimer;
-
-	void onPathTimerTimeout();
-
-
-	Player* player;
-
-	AnimatedSprite sprite;
-	MovementComponent movement = MovementComponent(this);
-	CollisionRect collision;
-
 	enum WalkingDirection {
 		WALKING_RIGHT,
 		WALKING_UP_RIGHT,
@@ -31,6 +18,16 @@ public:
 
 	WalkingDirection walkDirection = WALKING_UP;
 
+	Pathfinding pathfinding;
+	Player* player;
+
+	TimerNode pathTimer;
+
+	AnimatedSprite sprite;
+	CollisionRect collision;
+
+	bool disableAI = true;
+
 	bool walking = false;
 
 	Enemy(std::string name = "Enemy");
@@ -38,4 +35,6 @@ public:
 	void ready() override;
 	void update(float delta) override;
 	void physicsUpdate(float delta) override;
+
+	void onPathTimerTimeout();
 };

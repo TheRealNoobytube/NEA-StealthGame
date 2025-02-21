@@ -18,10 +18,19 @@ void Sprite::ready() {
 
 void Sprite::update(float delta) {
 	__super::update(delta);
+
+	if (!visible) {
+		return;
+	}
+
 	if (texture != nullptr) {
 		// SDL_FLIP_VERTICALLY const has a value of 2, so we multiply flipV by 2 to make sure that, if flipV is true, it flips vertically
 		SDL_RendererFlip flip = static_cast<SDL_RendererFlip>(flipH | (flipV * 2));
 		Vector2D globalPosition = getGlobalPosition();
+		Vector2D renderOffset = getSceneTree()->getRenderOffset();
+		globalPosition.x += renderOffset.x;
+		globalPosition.y += renderOffset.y;
+
 		Vector2D dimensions = this->texture->getDimensions();
 		float textureWidth = dimensions.x / hFrames;
 		float textureHeight = dimensions.y / vFrames;
@@ -48,6 +57,10 @@ void Sprite::setTexture(std::string filepath) {
 		Texture* texture = new Texture(filepath);
 		setTexture(texture);
 	}
+}
+
+Texture* Sprite::getTexture() {
+	return this->texture;
 }
 
 

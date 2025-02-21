@@ -6,6 +6,14 @@
 
 class TestScene : public Level {
 private:
+
+	List<Vector2D> positions = {};
+
+
+
+	Node2D tiles;
+
+
 	Enemy enemy;
 	Player player;
 	CollisionBody body2;
@@ -13,11 +21,6 @@ private:
 	CollisionBody body;
 	CollisionRect shape;
 
-	CollisionBody body4;
-	CollisionRect shape4;
-
-	CollisionBody buttonBody;
-	CollisionRect shape3;
 	Button backButton = Button("Back");
 
 

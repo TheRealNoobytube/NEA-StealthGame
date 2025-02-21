@@ -23,6 +23,7 @@ private:
 
     const int FPS = 60;
     const float NANOSECONDSPERFRAME = 1000000000 / (float)FPS;
+    const float SECONDSPERFRAME = 1 / (float)FPS;
 
     std::string appName = "Stealth Game";
     std::string basePath = SDL_GetBasePath();

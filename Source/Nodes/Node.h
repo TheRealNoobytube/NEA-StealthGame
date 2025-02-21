@@ -4,6 +4,7 @@
 #include "Source/Application/Vector2D.h"
 #include "Source/Application/Signal.h"
 
+
 #include <algorithm>
 #include <iostream>
 #include <string>
@@ -11,7 +12,6 @@
 class SceneTree; //forward declaration of SceneTree because SceneTree includes Node, but Node hasn't been defined yet
                  //this would lead to dependency issues and a bunch of errors
                  //first we define Node and then we can include SceneTree so no dependencies are missing
-
 
 
 class Node {
@@ -65,9 +65,12 @@ public:
 
 	void queueFree();
 
+	float linearInterpolate(float start, float end, float t);
+
 	Vector2D getMousePosition();
 
 	void drawRect(Vector2D position, Vector2D size, Color color = Color(0,0,0));
+	void drawLine(Vector2D startPoint, Vector2D endPoint, Color color = Color(0, 0, 0));
 
 	bool isKeyPressed(Uint32 key);
 	bool isKeyJustPressed(Uint32 key);

@@ -14,11 +14,13 @@ private:
 public:
 	Pathfinding(std::string name = "Pathfinding");
 
+	bool drawPath = false;
+
 	List<Vector2D> currentPath;
 
 	float desiredDistanceToPoint = 10;
 
-	void followPath(Entity& node, MovementComponent& movement);
+	void followPath(Entity* node);
 	void findPath(Vector2D start, Vector2D target);
 
 	void ready() override;

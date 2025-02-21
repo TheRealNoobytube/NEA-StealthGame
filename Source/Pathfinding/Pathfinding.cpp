@@ -20,10 +20,14 @@ void Pathfinding::ready() {
 void Pathfinding::update(float delta) {
 	__super::update(delta);
 
+	if (drawPath) {
+		for (int i = 0; i < currentPath.getSize(); i++) {
+			drawRect(Vector2D(currentPath.get(i).x + navMesh->getGlobalPosition().x, currentPath.get(i).y + navMesh->getGlobalPosition().y), navMesh->boxSize, Color(255, 255, 255, 140));
+		}
+	}
 }
 
 void Pathfinding::findPath(Vector2D startPos, Vector2D targetPos) {
-
 	if (navMesh == nullptr) {
 		return;
 	}
@@ -104,7 +108,9 @@ float Pathfinding::calculateDistance(Vector2D posOne, Vector2D posTwo) {
 	float x = abs(posTwo.x - posOne.x);
 	float y = abs(posTwo.y - posOne.y);
 
-	return (x < y) ? x : y;
+
+	//return (x > y) ? x : y;
+	return sqrt(x * x + y * y);
 }
 
 
@@ -115,10 +121,12 @@ void Pathfinding::constructPath(AStarNode* first, AStarNode startNode) {
 	currentPath.clear();
 
 	while (currentPathNode->position != startNode.position) {
-		tempList.add(currentPathNode->position);
-		AStarNode* lastNode = currentPathNode;
+		tempList.add(Vector2D(currentPathNode->position.x , currentPathNode->position.y));
 		currentPathNode = currentPathNode->connection;
 	}
+
+	List<Vector2D> simplifiedList;
+	Vector2D lastDirection = Vector2D(0, 0);
 
 	for (int i = tempList.getSize() - 1; i >= 0; i--) {
 		currentPath.add(tempList.get(i));
@@ -126,28 +134,29 @@ void Pathfinding::constructPath(AStarNode* first, AStarNode startNode) {
 }
 
 
-void Pathfinding::followPath(Entity& entity, MovementComponent& movement) {
-
-
-
-	//std::cout << "ffollowing\n";
+void Pathfinding::followPath(Entity* entity) {
+	if (currentPath.isEmpty()) {
+		return;
+	}
 
 	Vector2D nextPoint = currentPath.get(0);
-	Vector2D entityGlobalPos = entity.getGlobalPosition();
+	Vector2D navMeshGlobalPos = navMesh->getGlobalPosition();
 
-	//drawRect(entityGlobalPos, Vector2D(8, 8), Color(255, 255, 0));
-	//drawRect(nextPoint, Vector2D(8, 8), Color(0, 255, 255));
+	nextPoint.x += navMeshGlobalPos.x;
+	nextPoint.y += navMeshGlobalPos.y;
+
+	Vector2D entityGlobalPos = entity->getGlobalPosition();
 
 	Vector2D directionToNextPoint;
 	directionToNextPoint.x = nextPoint.x - entityGlobalPos.x;
 	directionToNextPoint.y = nextPoint.y - entityGlobalPos.y;
 	directionToNextPoint = directionToNextPoint.normalized();
 	
-	movement.direction = directionToNextPoint;
-	movement.velocity.x = entity.speed * movement.direction.x;
-	movement.velocity.y = entity.speed * movement.direction.y;
+	entity->movement.direction = directionToNextPoint;
+	entity->movement.velocity.x = entity->speed * entity->movement.direction.x;
+	entity->movement.velocity.y = entity->speed * entity->movement.direction.y;
 
-	movement.applyVelocity();
+	entity->movement.applyVelocity();
 
 	if (entityGlobalPos.x > nextPoint.x - desiredDistanceToPoint && entityGlobalPos.x < nextPoint.x + desiredDistanceToPoint) {
 		if (entityGlobalPos.y > nextPoint.y - desiredDistanceToPoint && entityGlobalPos.y < nextPoint.y + desiredDistanceToPoint) {

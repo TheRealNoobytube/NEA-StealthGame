@@ -23,12 +23,12 @@ void AnimatedSprite::update(float delta) {
 
 
 
-void AnimatedSprite::createAnimation(std::string name, List<int> frames, int fps, bool loop) {
+void AnimatedSprite::createAnimation(std::string name, List<int> frames, bool flipH, bool flipV, int fps, bool loop) {
 	if (getAnimation(name) != nullptr) { //if the animation name already exists, update the animation instead
 		changeAnimation(name, frames);
 	}
 	else {
-		animations.add(Animation(name, frames, fps, loop));
+		animations.add(Animation(name, frames, flipH, flipV, fps, loop));
 	}
 }
 
@@ -55,6 +55,9 @@ void AnimatedSprite::play(std::string name, bool restart) {
 
 	frame = animations.get(currentAnimationIndex).frames.get(currentFrameIndex);
 	setFps(animations.get(currentAnimationIndex).fps);
+
+	flipH = animations.get(currentAnimationIndex).flipH;
+	flipV = animations.get(currentAnimationIndex).flipV;
 
 	loop = animations.get(currentAnimationIndex).loop;
 	animationTimer.start();

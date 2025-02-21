@@ -44,8 +44,8 @@ void Application::launch() {
     //When loop starts, we have to have a whole frame of time before the first update call
     //So we call both update methods outside the loop to account for this
     applicationReady();
-    applicationUpdate(NANOSECONDSPERFRAME);
-    applicationPhysicsUpdate(NANOSECONDSPERFRAME);
+    applicationUpdate(SECONDSPERFRAME);
+    applicationPhysicsUpdate(SECONDSPERFRAME);
 
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
@@ -82,13 +82,13 @@ void Application::launch() {
 
         //physicsUpdate is fixed, and therefore any lag between physicsUpdates must be accounted for in order to get accurate phsyics
         while (lag >= NANOSECONDSPERFRAME) { 
-            applicationPhysicsUpdate(NANOSECONDSPERFRAME); //deltaTime is nanoseconds per frame because time between physicsUpdates is fixed
+            applicationPhysicsUpdate(SECONDSPERFRAME); //deltaTime is nanoseconds per frame because time between physicsUpdates is fixed
             lag -= NANOSECONDSPERFRAME;
         }
         //we wait to do all the unaccounted physicsUpdates before we move on to rendering, as otherwise we'll be constantly rendering
         //which could contribute to lag between physicsUpdate frames
 
-        applicationUpdate(delta); 
+        applicationUpdate(delta / 1000000000);
 
         SDL_RenderPresent(renderer); //present final render
 

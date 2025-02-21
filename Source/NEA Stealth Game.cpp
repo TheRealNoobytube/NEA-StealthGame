@@ -33,6 +33,8 @@ class StealthGame : public Application {
 		//have to queue Nodes until end of frame because some Nodes may still need to access a Node the frame before it gets deleted
 		//deleting a Node midframe is not very intuitive and usually the source of a lot of glitches
 		sceneTree->freeNodes();
+
+
 	}
 
 	void handleInput(SDL_Event& event) override{

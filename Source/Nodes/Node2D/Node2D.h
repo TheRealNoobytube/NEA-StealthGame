@@ -2,6 +2,7 @@
 #include "Source/Nodes/Node.h"
 
 class Node2D : public Node {
+private:
 public:
 	Node2D(std::string name = "Node2D") : Node(name) {};
 

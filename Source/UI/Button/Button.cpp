@@ -28,6 +28,9 @@ void Button::update(float delta){
 		pressed = false;
 	}
 
+
+	
+
 	
 	//finds if the mouse is hovering in the bounds of the button
 	Vector2D mousePos = getMousePosition();

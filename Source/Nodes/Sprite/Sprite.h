@@ -3,6 +3,8 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include "Source/Application/Texture.h"
+#include "Source/Nodes/Camera/Camera.h"
+
 
 class Sprite : public Node2D {
 private:
@@ -11,6 +13,8 @@ private:
 	int hFrames = 1;
 
 public:
+	bool visible = true;
+
 	bool flipH = false;
 	bool flipV = false;
 	int frame = 0;
@@ -23,6 +27,7 @@ public:
 	void update(float delta) override;
 	void setTexture(Texture* texture);
 	void setTexture(std::string filepath);
+	Texture* getTexture();
 
 	//void setFrame(int frame);
 	//int getFrame();
@@ -31,4 +36,6 @@ public:
 	void setHFrames(int hFrames);
 	int getVFrames();
 	int getHFrames();
+
+	void setCamera(Camera* camera);
 };

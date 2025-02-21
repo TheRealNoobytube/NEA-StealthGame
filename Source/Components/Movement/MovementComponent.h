@@ -1,9 +1,19 @@
 #pragma once
 #include "Source/Nodes/Node.h"
+#include "Source/Collision/Raycast/Raycast.h"
 
 class Entity;
+class CollisionBody;
 
-class MovementComponent : public Node {
+class MovementComponent : public Node2D {
+private:
+	List<Vector2D> points;
+
+	Raycast sweptRaycast;
+
+	Vector2D findIntersectionSize(List<CollisionBody*> bodies);
+	void findCollisions(Node* node, List<CollisionData>* data);
+
 public:
 	MovementComponent(Entity* entity = nullptr, std::string name = "MovementComponent");
 
@@ -13,6 +23,9 @@ public:
 
 	Entity* entity;
 
+	void ready() override;
+	void update(float delta) override;
+	
 	//returns true if any collisions took place, otherwise returns false
 	bool applyVelocity();
 

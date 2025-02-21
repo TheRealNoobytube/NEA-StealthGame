@@ -13,6 +13,6 @@ void CollisionShape::update(float delta) {
 	__super::update(delta);
 
 }
-CollisionBody* CollisionShape::detectCollisions(CollisionBody* body){
-	return nullptr;
+CollisionData CollisionShape::detectCollisions(CollisionBody* body){
+	return CollisionData();
 }

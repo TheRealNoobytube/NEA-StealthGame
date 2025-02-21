@@ -97,6 +97,16 @@ void SceneTree::freeNodes() {
 	}
 }
 
+
+void SceneTree::setRenderOffset(Vector2D offset) {
+	this->renderOffset = offset;
+}
+
+Vector2D SceneTree::getRenderOffset() {
+	return this->renderOffset;
+}
+
+
 Vector2D SceneTree::getRenderScale() {
 	float x;
 	float y;

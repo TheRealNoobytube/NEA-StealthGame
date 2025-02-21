@@ -1,7 +1,7 @@
 #include "CollisionBody.h"
 
 
-CollisionBody::CollisionBody(std::string name) : Node2D(name){
+CollisionBody::CollisionBody(std::string name) : Collision(name){
 
 }
 
@@ -12,15 +12,14 @@ void CollisionBody::ready() {
 void CollisionBody::update(float delta) {
 	__super::update(delta);
 
-	//compareBodies(getSceneTree()->getRoot());
 }
 
-void CollisionBody::compareBodies(Node* currentNode, List<CollisionBody*>* bodies) {
+void CollisionBody::compareBodies(Node* currentNode, List<CollisionData>* bodies) {
 	auto node = dynamic_cast<CollisionBody*>(currentNode); 
 
 	if (node != this && node != nullptr) {//make sure the current node isn't the this one and that the current node derives from CollisionBody
 
-		//use bitmask operation to check if the current node is in the same collision layer as this body's collision mask
+		//use bitwise operation to check if the current node is in the same collision layer as this body's collision mask
 		//makes sure we don't waste time checking collision with something that isn't in the same layer
 		if (node->layer & (mask)) {
 
@@ -30,10 +29,11 @@ void CollisionBody::compareBodies(Node* currentNode, List<CollisionBody*>* bodie
 				auto shape = dynamic_cast<CollisionShape*>(getChild(i));
 				if (shape != nullptr) { //make sure the current node derives from CollisionShape
 					//we don't want to compare collisions with the current node we're looking at, so we check the shapes parent
-					CollisionBody* body = shape->detectCollisions(node);
+					CollisionData data = shape->detectCollisions(node);
 
-					if (body != nullptr) {
-						bodies->add(body);
+					if (data.colliding) {
+						bodies->add(data);
+						break;
 					}
 				}
 			}
@@ -48,8 +48,9 @@ void CollisionBody::compareBodies(Node* currentNode, List<CollisionBody*>* bodie
 }
 
 
-List<CollisionBody*> CollisionBody::requestCollisions() {
-	List<CollisionBody*> bodies;
+List<CollisionData> CollisionBody::requestCollisions() {
+	List<CollisionData> bodies;
 	compareBodies(getSceneTree()->getRoot(), &bodies);
 	return bodies;
 }
+

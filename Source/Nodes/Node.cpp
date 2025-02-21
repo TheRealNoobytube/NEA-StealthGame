@@ -152,6 +152,11 @@ void Node::queueFree() {
 }
 
 
+float Node::linearInterpolate(float start, float end, float t) {
+	return start + t * (end - start);
+}
+
+
 Vector2D Node::getMousePosition() {
 	int x;
 	int y;
@@ -160,9 +165,19 @@ Vector2D Node::getMousePosition() {
 }
 
 void Node::drawRect(Vector2D position, Vector2D size, Color color) {
-	SDL_FRect rect = { position.x, position.y, size.x, size.y };
+	Vector2D renderOffset = getSceneTree()->getRenderOffset();
+
+	SDL_FRect rect = { position.x + renderOffset.x, position.y + renderOffset.y, size.x, size.y };
 	SDL_SetRenderDrawColor(getSceneTree()->getRenderer(), color.r, color.g, color.b, color.a);
 	SDL_RenderFillRectF(getSceneTree()->getRenderer(), &rect);
+}
+
+
+void Node::drawLine(Vector2D startPoint, Vector2D endPoint, Color color) {
+	Vector2D renderOffset = getSceneTree()->getRenderOffset();
+
+	SDL_SetRenderDrawColor(getSceneTree()->getRenderer(), color.r, color.g, color.b, color.a);
+	SDL_RenderDrawLineF(getSceneTree()->getRenderer(), startPoint.x + renderOffset.x, startPoint.y + renderOffset.y, endPoint.x + renderOffset.x, endPoint.y + renderOffset.y);
 }
 
 

@@ -29,5 +29,7 @@ public:
 	void setTexture(std::string newTexturePath);
 	void setTexture(SDL_Surface* surface);
 
+	SDL_Texture* getTexture();
+
 	Vector2D getDimensions();
 };

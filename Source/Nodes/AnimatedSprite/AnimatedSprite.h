@@ -9,14 +9,18 @@ private:
 		List<int> frames;
 		int fps;
 		bool loop;
+		bool flipH;
+		bool flipV;
 
 		Animation() {}
 
-		Animation(std::string name, List<int> frames, int fps, bool loop) {
+		Animation(std::string name, List<int> frames, bool flipH, bool flipV, int fps, bool loop) {
 			this->name = name;
 			this->frames = frames;
 			this->fps = fps;
 			this->loop = loop;
+			this->flipH = flipH;
+			this->flipV = flipV;
 		}
 	};
 
@@ -36,7 +40,7 @@ public:
 	AnimatedSprite(std::string filepath = "", std::string name = "AnimatedSprite");
 	AnimatedSprite(Texture* texture, std::string name = "AnimatedSprite");
 
-	void createAnimation(std::string name, List<int> frames, int fps = 10, bool loop = false);
+	void createAnimation(std::string name, List<int> frames, bool flipH = false, bool flipV = false, int fps = 10, bool loop = false);
 	void changeAnimation(std::string name, List<int> frames);
 
 	void play(std::string name, bool restart = false);

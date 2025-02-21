@@ -1,7 +1,7 @@
 #include "Level.h"
 
 Level::Level(std::string name) : Node2D(name) {
-
+	addChild(&navMesh);
 }
 
 void Level::ready() {
@@ -22,6 +22,6 @@ void Level::update(float delta) {
 		drawPosition.y *= navMesh.boxSize.y;
 
 
-		drawRect(drawPosition, navMesh.boxSize, Color(255, 255, 255));
+		//drawRect(drawPosition, navMesh.boxSize, Color(255, 255, 255));
 	}
 }

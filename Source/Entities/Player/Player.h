@@ -1,39 +1,61 @@
 #pragma once
 #include "Source/Entities/Entity.h"
+#include "Source/Nodes/Camera/Camera.h"
 
 class Player : public Entity {
 private:
-	AnimatedSprite sprite;
-	CollisionRect collisionRect;
-	MovementComponent movement = MovementComponent(this);
-
-	int animationTimer = 0;
-	int fps = 12;
-	int walkingFrame = 1;
-
-	enum WalkingDirection {
-		WALKING_RIGHT,
-		WALKING_UP_RIGHT,
-		WALKING_UP,
-		WALKING_UP_LEFT,
-		WALKING_LEFT,
-		WALKING_DOWN_LEFT,
-		WALKING_DOWN,
-		WALKING_DOWN_RIGHT
+	
+	enum State {
+		IDLE,
+		MOVING,
+		LEAN
 	};
 
-	WalkingDirection walkDirection = WALKING_UP;
+	State currentState;
+	State nextState = IDLE;
 
-	bool walking = false;
+
+	enum HorizontalDirection {
+		LEFT,
+		RIGHT,
+		H_NONE
+	};
+
+	enum VerticalDirection {
+		UP,
+		DOWN,
+		V_NONE
+	};
+
+	VerticalDirection vertical = UP;
+	HorizontalDirection horizontal = H_NONE;
+
+	bool isColliding = false;
+
+	Camera camera;
+	AnimatedSprite sprite;
+	CollisionRect collisionRect;
+
+	float defaultCameraSpeed = 8;
+	float leanCameraSpeed = 3;
+
+	int cameraLeanOffsetAmount = 50;
+	int cameraLeanRaycastLength = 16;
+	Raycast cameraLeanRaycast;
+	TimerNode cameraLeanTimer;
+
+	void cameraLeanTimerTimeout();
+
+	void stateEntered(State state);
+	void stateExited(State state);
+	void stateUpdate(State state);
+	void calculateMovement();
 
 public:
 	Player(std::string name = "Player");
 
-	//direction is a unit vector, meaning its magnitude will always be 1 or -1
-
 	void ready() override;
 	void update(float delta) override;
 	void physicsUpdate(float delta) override;
-
 };
 

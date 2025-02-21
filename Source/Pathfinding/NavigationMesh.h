@@ -41,21 +41,21 @@ public:
 	};
 
 	int bakingCollisionLayer = 1;
-
-	void ready() override;
-	void update(float delta) override;
-	
-	//void drawSquare(Vector2D pos);
-
-	void bakeMesh();
-	Vector2D globalToMap(Vector2D position);
-	Vector2D mapToGlobal(Vector2D position);
-	bool isInvalidMapPosition(Vector2D position);
+	bool drawMap = false;
 
 	List<List<AStarNode>*> map;
 
-	Vector2D boxSize = Vector2D(10, 10);
-	Vector2D size = Vector2D(96 * 8, 96 * 4);
+	Vector2D boxSize = Vector2D(8, 8);
+	Vector2D size = Vector2D(400, 200);
+	
+	void bakeMesh();
+
+	void ready() override;
+	void update(float delta) override;
+
+	Vector2D globalToMap(Vector2D position);
+	Vector2D mapToGlobal(Vector2D position);
+	bool isInvalidMapPosition(Vector2D position);
 
 	AStarNode& getNode(Vector2D position);
 

@@ -4,6 +4,7 @@
 #include "Source/Collision/CollisionShapes/CollisionRect.h"
 #include "Source/Pathfinding/NavigationMesh.h"
 #include "Source/Entities/Player/Player.h"
+#include "Source/Nodes/Camera/Camera.h"
 
 class Level : public Node2D {
 public:

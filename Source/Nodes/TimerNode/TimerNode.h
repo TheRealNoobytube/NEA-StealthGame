@@ -13,7 +13,7 @@ public:
 
 	void start(float time = -1);
 	void stop();
-	void pause();
+	void pause(bool pause);
 
 
 	void setCurrentTime(float time);
@@ -22,6 +22,7 @@ public:
 	void setLength(float length);
 	float getLength();
 
+	bool isRunning();
 
 private:
 	float currentTime = 0;

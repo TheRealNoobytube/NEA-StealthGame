@@ -18,20 +18,20 @@ void NavigationMesh::ready() {
 void NavigationMesh::update(float delta) {
 	__super::update(delta);
 
-	int ratioX = size.x / boxSize.x;
-	int ratioY = size.y / boxSize.y;
+	if (drawMap) {
+		int ratioX = size.x / boxSize.x;
+		int ratioY = size.y / boxSize.y;
 
-	for (int x = 0; x < map.getSize(); x++) {
-		for (int y = 0; y < map.get(x)->getSize(); y++) {
-			//AStarNode node = map.get(x)->get(y);
+		for (int x = 0; x < map.getSize(); x++) {
+			for (int y = 0; y < map.get(x)->getSize(); y++) {
+				if (map.get(x)->get(y).reachable) {
+					drawRect(Vector2D(map.get(x)->get(y).position.x + 0.5 + getGlobalPosition().x, map.get(x)->get(y).position.y + 0.5 + getGlobalPosition().y), Vector2D(boxSize.x - 1, boxSize.y - 1), Color(50, 100, 220, 100));
+				}
+				else {
+					drawRect(Vector2D(map.get(x)->get(y).position.x + 0.5 + getGlobalPosition().x, map.get(x)->get(y).position.y + 0.5 + getGlobalPosition().y), Vector2D(boxSize.x - 1, boxSize.y - 1), Color(0, 190, 0, 100));
+				}
 
-			if (map.get(x)->get(y).reachable) {
-				drawRect(Vector2D(map.get(x)->get(y).position.x + 0.5, map.get(x)->get(y).position.y + 0.5), Vector2D(boxSize.x - 1, boxSize.y - 1), Color(50, 100, 220, 100));
 			}
-			else {
-				drawRect(Vector2D(map.get(x)->get(y).position.x + 0.5, map.get(x)->get(y).position.y + 0.5), Vector2D(boxSize.x - 1, boxSize.y - 1), Color(0, 190, 0, 100));
-			}
-
 		}
 	}
 }
@@ -41,8 +41,6 @@ void NavigationMesh::bakeMesh() {
 	if (!map.isEmpty()) {
 		map.clear();
 	}
-
-	Vector2D globalPosition = getGlobalPosition();
 	int mapSpaceX = size.x / boxSize.x;
 	int mapSpaceY = size.y / boxSize.y;
 
@@ -50,7 +48,7 @@ void NavigationMesh::bakeMesh() {
 	CollisionRect* tempRect = new CollisionRect();
 
 	tempRect->setSize(boxSize);
-	tempBody->mask = bakingCollisionLayer;
+	tempBody->mask = CollisionBody::WORLD;
 	tempBody->addChild(tempRect);
 	addChild(tempBody);
 
@@ -67,7 +65,7 @@ void NavigationMesh::bakeMesh() {
 			}
 			else {
 				tempRect->position = nodePosition;
-				List<CollisionBody*> bodies = tempBody->requestCollisions();
+				List<CollisionData> bodies = tempBody->requestCollisions();
 				if (!bodies.isEmpty()) {
 					node.reachable = false;
 				}
@@ -108,15 +106,15 @@ NavigationMesh::AStarNode& NavigationMesh::getNode(Vector2D position) {
 
 
 Vector2D NavigationMesh::globalToMap(Vector2D position) {
-	int x = (int)floor(position.x / boxSize.x);
-	int y = (int)floor(position.y / boxSize.y);
+	Vector2D globalPos = getGlobalPosition();
+	int x = (int)floor((position.x ) / boxSize.x);
+	int y = (int)floor((position.y ) / boxSize.y);
 	
 	return Vector2D(x, y);
 }
 
 Vector2D NavigationMesh::mapToGlobal(Vector2D position) {
-
-	return Vector2D(position.x * boxSize.x, position.y * boxSize.y);
+	return Vector2D(position.x * boxSize.x, position.y * boxSize.y );
 }
 
 bool NavigationMesh::isInvalidMapPosition(Vector2D position) {

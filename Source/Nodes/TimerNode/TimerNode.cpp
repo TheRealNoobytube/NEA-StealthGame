@@ -13,7 +13,7 @@ void TimerNode::ready() {
 void TimerNode::update(float delta) {
 	__super::update(delta);
 
-	if (running) {
+	if (running && !paused) {
 		currentTime += delta; //this is how the timer progresses
 
 		if (length > 0) {
@@ -40,31 +40,23 @@ void TimerNode::update(float delta) {
 
 void TimerNode::start(float time) {
 	running = true;
-
-	if (!paused) {
-		setCurrentTime(0);
-	}
-	else if (time != -1) {
-		setCurrentTime(time);
-	}
-	else {
-		paused = false;
-	}
-	
+	setCurrentTime(time);
 }
 
 void TimerNode::stop() {
 	running = false;
 }
 
-void TimerNode::pause() {
-	paused = true;
-	stop();
+void TimerNode::pause(bool pause) {
+	paused = pause;
+	if (paused) {
+		stop();
+	}
 }
 
 void TimerNode::setCurrentTime(float time) {
 	if (time > 0) {
-		this->currentTime = time * 1000000000;
+		this->currentTime = time ;
 	}
 	else {
 		this->currentTime = 0;
@@ -72,7 +64,7 @@ void TimerNode::setCurrentTime(float time) {
 }
 
 float TimerNode::getCurrentTime() {
-	return this->currentTime / 1000000000;
+	return this->currentTime;
 }
 
 
@@ -87,4 +79,8 @@ void TimerNode::setLength(float length) {
 
 float TimerNode::getLength() {
 	return this->length;
+}
+
+bool TimerNode::isRunning() {
+	return running;
 }

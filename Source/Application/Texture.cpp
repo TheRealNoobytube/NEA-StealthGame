@@ -57,7 +57,7 @@ void Texture::setTexture(SDL_Surface* surface) {
 	}
 
 	texture = SDL_CreateTextureFromSurface(this->renderer, surface);
-
+	
 	if (texture == NULL) {
 		std::cout << "SURFACE IS NOT VALID " << surface << "\n";
 	}
@@ -83,6 +83,12 @@ void Texture::setTexture(std::string newTexturePath) {
 		generateTextureDimensions();
 	}
 }
+
+SDL_Texture* Texture::getTexture() {
+	return this->texture;
+}
+
+
 
 void Texture::generateTextureDimensions() {
 	int w; 

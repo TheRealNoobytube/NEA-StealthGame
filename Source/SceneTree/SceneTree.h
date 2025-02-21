@@ -14,7 +14,8 @@ private:
 	SDL_Renderer* renderer;
 	std::string basePath;
 
-	Vector2D viewportSize = Vector2D(0,0);
+	Vector2D viewportSize = Vector2D(0, 0);
+	Vector2D renderOffset = Vector2D(0, 0);
 
 	//input buffers
 	const int KEYBUFFERSIZE = SDL_NUM_SCANCODES;
@@ -45,8 +46,12 @@ public:
 	Node* getCurrentScene();
 	bool requestedSceneChange();
 
+	void setRenderOffset(Vector2D offset);
+	Vector2D getRenderOffset();
 	Vector2D getRenderScale();
 	Vector2D getViewportSize();
+	
+
 
 	void handleInput(SDL_Event& event);
 
@@ -59,6 +64,7 @@ public:
 	bool isMouseButtonPressed(int button);
 	bool isMouseButtonJustPressed(int button);
 	bool isMouseButtonReleased(int button);
-
-
 };
+
+
+
