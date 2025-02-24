@@ -2,9 +2,9 @@
 
 AboutMenu::AboutMenu( std::string name) : Node2D(name){
 	addChild(&aboutText);
-	aboutText.setTextWrapLength(300);
-	aboutText.setFontSize(12);
-	aboutText.scale = Vector2D(0.7, 0.7);
+	aboutText.setTextWrapLength(600);
+	aboutText.setFontSize(24);
+	aboutText.scale = Vector2D(0.35, 0.35);
 
 	aboutText.text = "This game was created for my Year 13 A-Level NEA." 
 	"\n The goal is to go through the levels as stealthily as possible, picking up any items along the way to beat"

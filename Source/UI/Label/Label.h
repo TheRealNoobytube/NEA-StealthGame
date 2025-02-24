@@ -20,6 +20,8 @@ public:
 	std::string text;
 	bool antiAliasing = true;
 	
+	bool visible = true;
+
 	Label(std::string text = " ", std::string name = "Label");
 	Label(TTF_Font* font, std::string name = "Label");
 	~Label();

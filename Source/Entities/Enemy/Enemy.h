@@ -26,7 +26,7 @@ public:
 	AnimatedSprite sprite;
 	CollisionRect collision;
 
-	bool disableAI = true;
+	bool disableAI = false;
 
 	bool walking = false;
 

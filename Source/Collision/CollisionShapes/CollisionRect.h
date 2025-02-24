@@ -15,6 +15,8 @@ public:
 
 	Color testColor = Color(255, 0, 0);
 	bool visible = true;
+	bool disabled = false;
+
 
 	void setSize(Vector2D size);
 	Vector2D getSize();

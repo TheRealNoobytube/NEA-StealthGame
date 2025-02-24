@@ -5,6 +5,7 @@
 #include "Source/Collision/CollisionBody.h"
 #include "Source/Collision/CollisionShapes/CollisionRect.h"
 #include "Source/Components/Movement/MovementComponent.h"
+#include "Source/Items/Item.h"
 
 class Entity : public CollisionBody {
 public:
@@ -13,3 +14,4 @@ public:
 	MovementComponent movement = MovementComponent(this);
 	float speed;
 };
+

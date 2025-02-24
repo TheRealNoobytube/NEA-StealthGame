@@ -98,10 +98,13 @@ void Label::ready() {
 	if (font == nullptr) {
 		setFont(getSceneTree()->getBasePath() + "..\\Fonts\\opensans.ttf");
 	}
+
 	generateTextSurface();
 }
 
 void Label::update(float delta) {
 	__super::update(delta);
-	renderText();
+	if (visible) {
+		renderText();
+	}
 }

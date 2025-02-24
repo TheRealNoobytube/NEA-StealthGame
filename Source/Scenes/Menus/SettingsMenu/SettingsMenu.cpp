@@ -15,17 +15,22 @@ void SettingsMenu::ready() {
 	__super::ready();
 	Vector2D viewportSize = getSceneTree()->getViewportSize();
 
-	settingsText.setFontSize(20);
-	settingsText.position.x = (viewportSize.x / 2) - (settingsText.getTextSize().x / 2);
+	settingsText.setFontSize(40);
+	settingsText.scale = Vector2D(0.5, 0.5);
+	settingsText.position.x = (viewportSize.x / 2) - (settingsText.getTextSize().x / 2) * settingsText.scale.x;
 
-	musicSliderText.position.x = (viewportSize.x / 2) - (musicSliderText.getTextSize().x / 2);
+	musicSliderText.setFontSize(28);
+	musicSliderText.scale = Vector2D(0.5, 0.5);
+	musicSliderText.position.x = (viewportSize.x / 2) - (musicSliderText.getTextSize().x / 2) * musicSliderText.scale.x;
 	musicSliderText.position.y = 35;
 
 	musicSlider.setSize(Vector2D(120, 10));
 	musicSlider.position.x = (viewportSize.x / 2) - (musicSlider.getSize().x / 2);
 	musicSlider.position.y = 53;
 
-	soundSliderText.position.x = (viewportSize.x / 2) - (soundSliderText.getTextSize().x / 2);
+	soundSliderText.setFontSize(28);
+	soundSliderText.scale = Vector2D(0.5, 0.5);
+	soundSliderText.position.x = (viewportSize.x / 2) - (soundSliderText.getTextSize().x / 2) * soundSliderText.scale.x;
 	soundSliderText.position.y = 75;
 
 	soundSlider.setSize(Vector2D(120, 10));

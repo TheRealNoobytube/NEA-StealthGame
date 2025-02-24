@@ -13,10 +13,11 @@ void MainMenu::ready() {
 
 	Vector2D viewportSize = getSceneTree()->getViewportSize();
 	titleText.setTextWrapLength(600);
-	titleText.setFontSize(26);
+	titleText.setFontSize(50);
+	titleText.scale = Vector2D(0.5, 0.5);
 
 	//set the x position of all the ui elements to be centered in the viewport
-	titleText.position.x = (viewportSize.x / 2) - (titleText.getTextSize().x / 2);
+	titleText.position.x = (viewportSize.x / 2) - (titleText.getTextSize().x / 2) * titleText.scale.x;
 	titleText.position.y = 3;
 
 	startButton.position.x = (viewportSize.x / 2) - (startButton.getSize().x / 2);

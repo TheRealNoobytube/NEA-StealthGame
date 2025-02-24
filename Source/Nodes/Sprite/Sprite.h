@@ -8,12 +8,13 @@
 
 class Sprite : public Node2D {
 private:
-	Texture* texture;
+	Texture* texture = nullptr;
 	int vFrames = 1;
 	int hFrames = 1;
 
 public:
 	bool visible = true;
+	bool ignoreRenderOffset = false;
 
 	bool flipH = false;
 	bool flipV = false;

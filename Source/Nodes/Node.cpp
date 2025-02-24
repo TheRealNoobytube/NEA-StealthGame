@@ -27,6 +27,7 @@ void Node::addChild(Node* node) {
 	}
 }
 
+
 //methods for removing children
 
 void Node::removeChild(std::string name) {

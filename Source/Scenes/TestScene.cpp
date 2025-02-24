@@ -1,36 +1,49 @@
 #include "TestScene.h"
 
 TestScene::TestScene(std::string name) : Level(name){
-	addChild(&tiles);
-
-	addChild(&body);
-	addChild(&body2);
-
-	addChild(&player);
-	addChild(&enemy);
+	worldLayer.addChild(&tiles);
+	worldLayer.addChild(&body);
+	worldLayer.addChild(&body2);
 
 	body.addChild(&shape);
 	body2.addChild(&shape2);
 
+	uiLayer.addChild(&backButton);
+	itemLayer.addChild(&item);
+	itemLayer.addChild(&item2);
+	itemLayer.addChild(&pistol);
+
+	pistol.position = Vector2D(20, 0);
+
+	item2.position = Vector2D(40, 40);
+
+	playerLayer.addChild(&player);
 	this->currentPlayer = &this->player;
 
-	Node* layerUI = new Node();
-	layerUI->addChild(&backButton);
-	addChild(layerUI);
+	for (int i = 0; i < 1; i++) {
+		Enemy* newEnemy = new Enemy();
+		enemyLayer.addChild(newEnemy);
+		newEnemy->position = Vector2D(rand() / 300, rand() / 300);
+	}
 }
 
+TestScene::~TestScene() {
+	for (int i = 0; i < enemyLayer.getChildCount(); i++) {
+		delete enemyLayer.getChild(i);
+	}
+}
 
 void TestScene::ready() {
 
 	player.position = Vector2D(100, 0);
-	enemy.position = Vector2D(200, 90);
+	//enemy.position = Vector2D(200, 90);
 
 	body.position = Vector2D(40, 40);
 	body2.position = Vector2D(100, 60);
 	shape2.setSize(Vector2D(100, 20));
 
-	backButton.position.x = 6;
-	backButton.position.y = getSceneTree()->getViewportSize().y - backButton.getSize().y - 6;
+	backButton.position.x = 3;
+	backButton.position.y = 3;
 	backButton.on_click.connect([this]() { onBackButtonPressed(); });
 
 
@@ -51,14 +64,7 @@ void TestScene::ready() {
 
 	
 
-	for (int i = 0; i < 0; i++) {
-		Enemy* newEnemy = new Enemy();
-		addChild(newEnemy);
 
-		newEnemy->position = Vector2D(rand() / 300, rand() / 300);
-
-
-	}
 
 
 

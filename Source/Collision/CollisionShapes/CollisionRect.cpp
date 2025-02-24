@@ -19,11 +19,14 @@ void CollisionRect::update(float delta) {
 
 // body parameter should be the body youre checking collision against, not the parent body of this collision shape
 CollisionData CollisionRect::detectCollisions(CollisionBody* body) {
+
 	for (int i = 0; i < body->getChildCount(); i++) {
 
 		//if the collision shape of the body is a rect, do rect_rect detection
-		auto shape = dynamic_cast<CollisionRect*>(body->getChild(i)); 
-		if (shape != nullptr) {
+		auto shape = dynamic_cast<CollisionRect*>(body->getChild(i));
+
+
+		if (shape != nullptr && !shape->disabled) {
 			CollisionData data = rect_rectIsColliding(shape);
 
 			if (data.colliding) {
@@ -32,6 +35,7 @@ CollisionData CollisionRect::detectCollisions(CollisionBody* body) {
 			}
 		}
 	}
+	
 
 	return CollisionData();
 }

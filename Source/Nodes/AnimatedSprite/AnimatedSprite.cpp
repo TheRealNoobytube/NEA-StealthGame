@@ -23,7 +23,7 @@ void AnimatedSprite::update(float delta) {
 
 
 
-void AnimatedSprite::createAnimation(std::string name, List<int> frames, bool flipH, bool flipV, int fps, bool loop) {
+void AnimatedSprite::createAnimation(std::string name, List<int> frames, int fps, bool flipH, bool flipV, bool loop) {
 	if (getAnimation(name) != nullptr) { //if the animation name already exists, update the animation instead
 		changeAnimation(name, frames);
 	}
@@ -93,15 +93,18 @@ float AnimatedSprite::getSpeedScale() {
 
 void AnimatedSprite::animationTimerTimeout() {
 	currentFrameIndex = (currentFrameIndex + 1) % animations.get(currentAnimationIndex).frames.getSize();
+	frame = animations.get(currentAnimationIndex).frames.get(currentFrameIndex);
+
 
 	if (!loop) {
-		if (currentFrameIndex == 0) {
+		if (currentFrameIndex == animations.get(currentAnimationIndex).frames.getSize() - 1) {
+			currentAnimationIndex = -1;
+			animationFinished.emit();
 			return;
 		}
 	}
 
 	animationTimer.start();
-	frame = animations.get(currentAnimationIndex).frames.get(currentFrameIndex);
 }
 
 int AnimatedSprite::findAnimationIndex(std::string name) {

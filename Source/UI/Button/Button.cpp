@@ -4,6 +4,7 @@ Button::Button(std::string text, std::string name) : Node2D(name) {
 	setText(text);
 	addChild(&label);
 	
+	
 }
 
 void Button::ready(){
@@ -13,7 +14,9 @@ void Button::ready(){
 	setHoverTexture(getSceneTree()->getBasePath() + "..\\Assets\\Button\\ButtonHover.png");
 	setPressTexture(getSceneTree()->getBasePath() + "..\\Assets\\Button\\ButtonPressed.png");
 	currentTexture = normalTexture;
-	
+
+	label.scale = Vector2D(0.5, 0.5);
+	label.setFontSize(24);
 }
 
 void Button::update(float delta){
@@ -83,8 +86,8 @@ void Button::update(float delta){
 			currentTexture = normalTexture;
 		}
 	}
-	label.position.x = (size.x / 2) - (label.getTextSize().x / 2); //aligns text to the center of the button
-	label.position.y = (size.y / 2) - (label.getTextSize().y / 2);
+	label.position.x = (size.x / 2) - (label.getTextSize().x / 2) * label.scale.x; //aligns text to the center of the button
+	label.position.y = (size.y / 2) - (label.getTextSize().y / 2) * label.scale.y;
 
 	if (useTextures) {
 		currentTexture.draw(getGlobalPosition(), scale, size);

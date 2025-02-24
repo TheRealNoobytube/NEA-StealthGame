@@ -188,7 +188,7 @@ private:
 
 	//cant check if a value in the array is nullptr because no all Lists will have a pointer template
 	//so instead we use helper functions. if the value isn't a pointer, then that means the value still exists, and therefore always return false
-	//in c++, any objecty that isn't a nullptr has a boolean value of true, so we can just return the inverse of the object to give the appropriate value 
+	//in c++, any object that isn't a nullptr has a boolean value of true, so we can just return the inverse of the object to give the appropriate value 
 	bool isNullptr(T* item) {
 		return !item;
 	}

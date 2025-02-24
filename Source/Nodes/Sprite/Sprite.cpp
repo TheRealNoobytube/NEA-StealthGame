@@ -28,8 +28,10 @@ void Sprite::update(float delta) {
 		SDL_RendererFlip flip = static_cast<SDL_RendererFlip>(flipH | (flipV * 2));
 		Vector2D globalPosition = getGlobalPosition();
 		Vector2D renderOffset = getSceneTree()->getRenderOffset();
-		globalPosition.x += renderOffset.x;
-		globalPosition.y += renderOffset.y;
+		if (!ignoreRenderOffset) {
+			globalPosition.x += renderOffset.x;
+			globalPosition.y += renderOffset.y;
+		}
 
 		Vector2D dimensions = this->texture->getDimensions();
 		float textureWidth = dimensions.x / hFrames;
@@ -49,7 +51,10 @@ void Sprite::update(float delta) {
 }
 
 void Sprite::setTexture(Texture* texture) {
-	this->texture = texture;
+	if (texture->getTexture() != NULL) {
+		this->texture = texture;
+	}
+
 }
 
 void Sprite::setTexture(std::string filepath) {

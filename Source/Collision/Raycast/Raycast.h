@@ -7,7 +7,7 @@ private:
 	bool colliding = false;
 	Vector2D intersectionPoint = Vector2D(0, 0);
 	Vector2D contactNormal = Vector2D(0, 0);
-
+	float contactTime = 0;
 
 	bool checkForIntersections(Node* node);
 	bool findRectIntersections(CollisionRect* rect);
@@ -16,9 +16,6 @@ private:
 
 public:
 	Raycast(std::string name = "Raycast");
-
-
-	float contactTime = 0;
 
 	Vector2D targetPosition = Vector2D(20, 3);
 
@@ -36,5 +33,6 @@ public:
 	bool isColliding();
 	Vector2D getIntersectionPoint();
 	Vector2D getContactNormal();
+	float getContactTime();
 
 };

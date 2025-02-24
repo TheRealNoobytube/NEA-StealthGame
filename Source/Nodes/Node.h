@@ -35,6 +35,7 @@ public:
 	Node(std::string name = "Node");
 	virtual ~Node();
 
+
 	virtual void ready();
 	virtual void update(float delta);
 	virtual void physicsUpdate(float fixedDelta);

@@ -18,7 +18,7 @@ void Raycast::update(float delta) {
     if (visible) {
         if (isColliding()) {
             drawLine(globalPosition, Vector2D(globalPosition.x + targetPosition.x, globalPosition.y + targetPosition.y), Color(50, 180, 10));
-            drawRect(intersectionPoint, Vector2D(1, 1), Color(0, 255, 255));
+            drawRect(intersectionPoint, Vector2D(1, 1), Color(255, 255, 255));
         }
         else {
             drawLine(globalPosition, Vector2D(globalPosition.x + targetPosition.x, globalPosition.y + targetPosition.y), Color(255, 0, 0));
@@ -41,7 +41,7 @@ bool Raycast::checkForIntersections(Node* node) {
             for (int i = 0; i < body->getChildCount(); i++) {
                 auto shape = dynamic_cast<CollisionRect*>(body->getChild(i));
 
-                if (shape != nullptr) {
+                if (shape != nullptr && !shape->disabled) {
                     intersectionFound = findRectIntersections(shape);
                 }
             }
@@ -95,17 +95,23 @@ bool Raycast::findRectIntersections(CollisionRect* rect) {
     }
 
 
-    float tHitFar = std::min(tFar.x, tFar.y);
+    float exitTime = std::min(tFar.x, tFar.y);
 
-    if (tHitFar < 0) {
+    if (exitTime < 0) {
         return false;
     }
 
-    contactTime = std::max(tNear.x, tNear.y);
+    float newContactTime = std::max(tNear.x, tNear.y);
 
-    if (contactTime < 0 || contactTime >= 1) {
+    if (newContactTime < 0 || newContactTime >= 1) {
         return false;
     }
+
+    if (newContactTime > contactTime) {
+        return true;
+    }
+
+    contactTime = newContactTime;
 
 
     intersectionPoint = globalPosition;
@@ -113,7 +119,7 @@ bool Raycast::findRectIntersections(CollisionRect* rect) {
     intersectionPoint.y += contactTime * targetPosition.y;
 
     if (tNear.x > tNear.y) {
-        if (1 / targetPosition.x < 0) {
+        if (targetPosition.x < 0) {
             //intersecting right side of rectangle
             contactNormal = Vector2D(1, 0);
         }
@@ -123,7 +129,7 @@ bool Raycast::findRectIntersections(CollisionRect* rect) {
         }
     }
     else if (tNear.x < tNear.y){
-        if (1 / targetPosition.y < 0) {
+        if (targetPosition.y < 0) {
             //intersecting bottom side of rectangle
             contactNormal = Vector2D(0, 1);
         }
@@ -132,7 +138,6 @@ bool Raycast::findRectIntersections(CollisionRect* rect) {
             contactNormal = Vector2D(0, -1);
         }
     }
-
 
     return true;
 }
@@ -159,7 +164,6 @@ void Raycast::checkAgainstRect(CollisionRect* rect) {
     }
 }
 
-
 void Raycast::resetValues() {
     intersectionPoint = Vector2D(INFINITY, INFINITY);
     contactNormal = Vector2D(0, 0);
@@ -179,3 +183,6 @@ Vector2D Raycast::getContactNormal() {
     return contactNormal;
 }
 
+float Raycast::getContactTime() {
+    return contactTime;
+}

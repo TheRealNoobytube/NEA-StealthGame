@@ -2,10 +2,22 @@
 
 Level::Level(std::string name) : Node2D(name) {
 	addChild(&navMesh);
+
+	addChild(&itemLayer);
+	addChild(&worldLayer);
+	addChild(&enemyLayer);
+	addChild(&playerLayer);
+	addChild(&uiLayer);
+
+	uiLayer.addChild(&itemsHUD);
 }
 
 void Level::ready() {
 	__super::ready();
+
+	if (currentPlayer != nullptr) {
+		currentPlayer->itemsHUD = &itemsHUD;
+	}
 
 	//bake the mesh
 	navMesh.bakeMesh();

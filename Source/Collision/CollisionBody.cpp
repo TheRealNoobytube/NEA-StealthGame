@@ -26,15 +26,18 @@ void CollisionBody::compareBodies(Node* currentNode, List<CollisionData>* bodies
 			//CollisionBodys can have multiple CollisionShapes in order to allow for more complex shapes without needing to create more bodies
 			//because of this we go through each child of a CollisionBody and detect collisions in all of its CollisionShapes
 			for (int i = 0; i < getChildCount(); i++) {
-				auto shape = dynamic_cast<CollisionShape*>(getChild(i));
-				if (shape != nullptr) { //make sure the current node derives from CollisionShape
+				auto shape = dynamic_cast<CollisionRect*>(getChild(i));
+
+				if (shape != nullptr && !shape->disabled) { //make sure the current node derives from CollisionShape
 					//we don't want to compare collisions with the current node we're looking at, so we check the shapes parent
+
 					CollisionData data = shape->detectCollisions(node);
 
 					if (data.colliding) {
 						bodies->add(data);
 						break;
 					}
+					
 				}
 			}
 

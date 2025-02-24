@@ -37,10 +37,12 @@ private:
 	Animation* getAnimation(std::string name);
 
 public:
+	Signal<> animationFinished;
+
 	AnimatedSprite(std::string filepath = "", std::string name = "AnimatedSprite");
 	AnimatedSprite(Texture* texture, std::string name = "AnimatedSprite");
 
-	void createAnimation(std::string name, List<int> frames, bool flipH = false, bool flipV = false, int fps = 10, bool loop = false);
+	void createAnimation(std::string name, List<int> frames, int fps = 10, bool flipH = false, bool flipV = false,  bool loop = false);
 	void changeAnimation(std::string name, List<int> frames);
 
 	void play(std::string name, bool restart = false);

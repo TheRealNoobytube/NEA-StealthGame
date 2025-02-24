@@ -1,6 +1,7 @@
 #pragma once
 #include "Source/Entities/Entity.h"
 #include "Source/Nodes/Camera/Camera.h"
+#include "Source/Scenes/Levels/Level.h"
 
 class Player : public Entity {
 private:
@@ -39,10 +40,20 @@ private:
 	float defaultCameraSpeed = 8;
 	float leanCameraSpeed = 3;
 
-	int cameraLeanOffsetAmount = 50;
+	int cameraLeanOffsetAmount = 40;
 	int cameraLeanRaycastLength = 16;
 	Raycast cameraLeanRaycast;
 	TimerNode cameraLeanTimer;
+
+	int currentItemIndex = -1;
+	List<Item*> items;
+
+	int currentWeaponIndex = -1;
+	List<Item*> weapons;
+
+	CollisionBody itemPickupArea;
+	CollisionRect itemPickupShape;
+
 
 	void cameraLeanTimerTimeout();
 
@@ -51,11 +62,26 @@ private:
 	void stateUpdate(State state);
 	void calculateMovement();
 
+	void onItemPickup(Item* item);
+	void useItem();
+
+	void nextItem();
+	Item* getCurrentItem();
+
+
+	void onWeaponPickup(Item* item);
+	void useWeapon();
+
+	void nextWeapon();
+	Item* getCurrentWeapon();
+
+
 public:
 	Player(std::string name = "Player");
+
+	ItemsHUD* itemsHUD;
 
 	void ready() override;
 	void update(float delta) override;
 	void physicsUpdate(float delta) override;
 };
-
