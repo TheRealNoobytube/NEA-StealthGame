@@ -16,25 +16,24 @@ void TimerNode::update(float delta) {
 	if (running && !paused) {
 		currentTime += delta; //this is how the timer progresses
 
-		if (length > 0) {
-			if (getCurrentTime() > length) {
-				setCurrentTime(length);
+		if (getCurrentTime() > length) {
+			setCurrentTime(length);
 
-				//if loop is true, keep removing length until the timer is under the value of length
-				//this is done as the program mightve been unfocused and any previous timeouts may not have been emitted
-				if (loop) {
-					do {
-						start(getCurrentTime() - length);
-						timeout.emit();
-					} while (getCurrentTime() > length);
-				}
-				else {
-					stop();
+			//if loop is true, keep removing length until the timer is under the value of length
+			//this is done as the program mightve been unfocused and any previous timeouts may not have been emitted
+			if (loop) {
+				do {
+					start(getCurrentTime() - length);
 					timeout.emit();
-				}
-
+				} while (getCurrentTime() > length);
 			}
+			else {
+				stop();
+				timeout.emit();
+			}
+
 		}
+		
 	}
 }
 

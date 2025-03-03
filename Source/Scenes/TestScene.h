@@ -11,18 +11,18 @@ private:
 
 	List<Vector2D> positions = {};
 
-	Pistol pistol;
-	Ration item;
-	Ration item2;
-	Node2D tiles;
+	Pistol* pistol = new Pistol();
+	Ration* item = new Ration();
+	Ration* item2 = new Ration();
+	Node2D* tiles = new Node2D();
 
-	Player player;
-	CollisionBody body2;
-	CollisionRect shape2;
-	CollisionBody body;
-	CollisionRect shape;
+	Player* player = new Player();
+	CollisionBody* body2 = new CollisionBody();
+	CollisionRect* shape2 = new CollisionRect();
+	CollisionBody* body = new CollisionBody();
+	CollisionRect* shape = new CollisionRect();
 
-	Button backButton = Button("Back");
+	Button* backButton = new Button("Back");
 
 
 public:

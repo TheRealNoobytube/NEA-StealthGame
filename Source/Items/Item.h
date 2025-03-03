@@ -1,27 +1,39 @@
 #pragma once
-#include "Source/Collision/CollisionBody.h"
+#include "Source/Entities/Entity.h"
 #include "Source/Nodes/Sprite/Sprite.h"
 
 class Item : public CollisionBody {
 private:
 
+	TimerNode* useTimer = new TimerNode();
+
 	bool equipped = false;
 	int quantity = 0;
 
 protected:
-	void onEquip();
-	void onRemove();
-	void onUse();
+	virtual void onEquip();
+	virtual void onRemove();
+	virtual void onUse();
 
 public:
 	Item(std::string name = "Item");
+
+	Item(Item& item);
+
+
+	Entity* owner;
+
+	CollisionRect* pickupRange = new CollisionRect();
+	Sprite* sprite = new Sprite();
+
 
 	bool isWeapon = false;
 	bool consumable = true;
 	bool stackable = false;
 
-	CollisionRect pickupRange;
-	Sprite sprite;
+	float useSpeed = 1;
+
+	float damage = 1;
 
 	void ready() override;
 	void update(float delta) override;
@@ -32,12 +44,16 @@ public:
 	void setQuantity(int quantity);
 	int getQuantity();
 
-	void equip();
+	void equip(Entity* owner);
 	void remove();
-	void use();
+	bool use();
 
 	bool isEquipped();
 
 	float getItemID();
+
+	void setUseSpeed(float speed);
+
+	bool onCooldown();
 };
 

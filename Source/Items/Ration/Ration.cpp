@@ -2,14 +2,15 @@
 
 
 Ration::Ration(std::string name) : Item(name) {
-
+	sprite->frame = 0;
+	
 }
 
 void Ration::ready() {
 	__super::ready();
 
-	sprite.frame = 0;
-
 	consumable = true;
 	stackable = true;
+
+	useSpeed = 0.1;
 }

@@ -9,7 +9,9 @@ class MovementComponent : public Node2D {
 private:
 	List<Vector2D> points;
 
-	Raycast sweptRaycast;
+	Vector2D lookingDirection = Vector2D(0, -1);
+
+	Raycast* sweptRaycast = new Raycast();
 
 	Vector2D findIntersectionSize(List<CollisionBody*> bodies);
 	void findCollisions(Node* node, List<CollisionData>* data);
@@ -27,8 +29,9 @@ public:
 	void update(float delta) override;
 	
 	//returns true if any collisions took place, otherwise returns false
-	bool applyVelocity();
+	List<CollisionData> applyVelocity();
 
+	Vector2D getLookingDirection();
 };
 
 #include "Source/Entities/Entity.h"

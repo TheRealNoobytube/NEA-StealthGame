@@ -9,9 +9,11 @@ private:
 	enum State {
 		IDLE,
 		MOVING,
-		LEAN
+		LEAN,
+		SHOOT
 	};
 
+	State lastState;
 	State currentState;
 	State nextState = IDLE;
 
@@ -33,26 +35,22 @@ private:
 
 	bool isColliding = false;
 
-	Camera camera;
-	AnimatedSprite sprite;
-	CollisionRect collisionRect;
+	Camera* camera = new Camera();
+	AnimatedSprite* sprite = new AnimatedSprite();
+	AnimatedSprite* gunHeldSprite = new AnimatedSprite();
+
+	CollisionRect* collisionRect = new CollisionRect();
 
 	float defaultCameraSpeed = 8;
 	float leanCameraSpeed = 3;
 
 	int cameraLeanOffsetAmount = 40;
 	int cameraLeanRaycastLength = 16;
-	Raycast cameraLeanRaycast;
-	TimerNode cameraLeanTimer;
-
-	int currentItemIndex = -1;
-	List<Item*> items;
+	Raycast* cameraLeanRaycast = new Raycast();
+	TimerNode* cameraLeanTimer = new TimerNode();
 
 	int currentWeaponIndex = -1;
 	List<Item*> weapons;
-
-	CollisionBody itemPickupArea;
-	CollisionRect itemPickupShape;
 
 
 	void cameraLeanTimerTimeout();
@@ -60,20 +58,22 @@ private:
 	void stateEntered(State state);
 	void stateExited(State state);
 	void stateUpdate(State state);
+	void statePhysicsUpdate(State state);
 	void calculateMovement();
 
-	void onItemPickup(Item* item);
-	void useItem();
+	void onItemPickup(Item* item) override;
+	void onItemSwitched(Item* item) override;
+	void onItemUsed(Item* item) override;
 
-	void nextItem();
-	Item* getCurrentItem();
+	void onWeaponPickup(Item* weapon);
+	void onWeaponSwitched(Item* weapon);
+	void onWeaponUsed(Item* weapon);
 
+	//void onWeaponPickup(Item* item);
+	//void useWeapon();
 
-	void onWeaponPickup(Item* item);
-	void useWeapon();
-
-	void nextWeapon();
-	Item* getCurrentWeapon();
+	//void nextWeapon();
+	//Item* getCurrentWeapon();
 
 
 public:

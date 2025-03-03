@@ -13,7 +13,7 @@ void Pathfinding::ready() {
 		std::cout << "CURRENT SCENE IS NOT A LEVEL, NO NAVMESH AVAILABLE FOR PATHFINDING\n";
 	}
 	else {
-		this->navMesh = &level->navMesh;
+		this->navMesh = level->navMesh;
 	}
 }
 
@@ -152,11 +152,11 @@ void Pathfinding::followPath(Entity* entity) {
 	directionToNextPoint.y = nextPoint.y - entityGlobalPos.y;
 	directionToNextPoint = directionToNextPoint.normalized();
 	
-	entity->movement.direction = directionToNextPoint;
-	entity->movement.velocity.x = entity->speed * entity->movement.direction.x;
-	entity->movement.velocity.y = entity->speed * entity->movement.direction.y;
+	entity->movement->direction = directionToNextPoint;
+	entity->movement->velocity.x = entity->speed * entity->movement->direction.x;
+	entity->movement->velocity.y = entity->speed * entity->movement->direction.y;
 
-	entity->movement.applyVelocity();
+	entity->movement->applyVelocity();
 
 	if (entityGlobalPos.x > nextPoint.x - desiredDistanceToPoint && entityGlobalPos.x < nextPoint.x + desiredDistanceToPoint) {
 		if (entityGlobalPos.y > nextPoint.y - desiredDistanceToPoint && entityGlobalPos.y < nextPoint.y + desiredDistanceToPoint) {

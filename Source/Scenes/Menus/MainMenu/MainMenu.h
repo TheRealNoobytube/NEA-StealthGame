@@ -8,11 +8,11 @@
 
 class MainMenu : public Node2D {
 private:
-	Label titleText = Label("Stealth Game");
-	Button startButton = Button("Start");
-	Button settingsButton = Button("Settings");
-	Button aboutButton = Button("About");
-	Button quitButton = Button("Quit");
+	Label* titleText = new Label("Stealth Game");
+	Button* startButton = new Button("Start");
+	Button* settingsButton = new Button("Settings");
+	Button* aboutButton = new Button("About");
+	Button* quitButton = new Button("Quit");
 
 public:
 	MainMenu(std::string name = "MainMenu");

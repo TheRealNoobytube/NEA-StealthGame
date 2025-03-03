@@ -1,5 +1,7 @@
 #pragma once
 #include "Source/Items/Item.h"
+#include "Source/Projectiles/PistolShot/PistolShot.h"
+#include "Source/Scenes/Levels/Level.h"
 
 class Pistol : public Item {
 public:
@@ -7,4 +9,7 @@ public:
 
 	void ready() override;
 	void update(float delta) override;
+
+	void onUse() override;
+
 };

@@ -32,7 +32,7 @@ private:
 	int currentAnimationIndex;
 	int currentFrameIndex;
 
-	TimerNode animationTimer;
+	TimerNode* animationTimer = new TimerNode();
 
 	Animation* getAnimation(std::string name);
 
@@ -46,6 +46,7 @@ public:
 	void changeAnimation(std::string name, List<int> frames);
 
 	void play(std::string name, bool restart = false);
+	void stop();
 
 	void animationTimerTimeout();
 
@@ -60,7 +61,9 @@ public:
 	void ready() override;
 	void update(float delta) override;
 	
+	bool isPlaying();
 
+	std::string getAnimationName();
 
 
 

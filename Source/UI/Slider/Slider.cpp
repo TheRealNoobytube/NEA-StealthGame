@@ -1,10 +1,10 @@
 #include "Slider.h"
 
 Slider::Slider(std::string name) : Node2D(name){
-	addChild(&sliderButton);
-	sliderButton.isClickedWhenLetGo = false;
-	sliderButton.setSize(Vector2D(10, 10));
-	sliderButton.position.x -= sliderButton.getSize().x / 2;
+	addChild(sliderButton);
+	sliderButton->isClickedWhenLetGo = false;
+	sliderButton->setSize(Vector2D(10, 10));
+	sliderButton->position.x -= sliderButton->getSize().x / 2;
 }
 
 
@@ -17,12 +17,12 @@ void Slider::ready() {
 	sliderProgress.setTexture(getSceneTree()->getBasePath() + "../Assets/Slider/SliderBar.png");
 
 	//custom button textures for the slider
-	sliderButton.setNormalTexture(getSceneTree()->getBasePath() + "../Assets/Slider/SliderButtonNormal.png");
-	sliderButton.setHoverTexture(getSceneTree()->getBasePath() + "../Assets/Slider/SliderButtonHover.png");
-	sliderButton.setPressTexture(getSceneTree()->getBasePath() + "../Assets/Slider/SliderButtonPressed.png");
+	sliderButton->setNormalTexture(getSceneTree()->getBasePath() + "../Assets/Slider/SliderButtonNormal.png");
+	sliderButton->setHoverTexture(getSceneTree()->getBasePath() + "../Assets/Slider/SliderButtonHover.png");
+	sliderButton->setPressTexture(getSceneTree()->getBasePath() + "../Assets/Slider/SliderButtonPressed.png");
 
 	float sliderSize = ((value - min) / (max - min)) * size.x; //interpolation done to get the slider progress size from the current value
-	sliderButton.position.x = sliderSize - (sliderButton.getSize().x / 2);
+	sliderButton->position.x = sliderSize - (sliderButton->getSize().x / 2);
 }
 
 void Slider::update(float delta) {
@@ -32,24 +32,24 @@ void Slider::update(float delta) {
 	//makes adjusting the slider more comfortable and less finicky as otherwise youll constantly fight with the slider
 	//to get the value you want unless you move the slider very slowly to make sure the mouse never leaves the Button
 
-	if (sliderButton.isPressed()) {
+	if (sliderButton->isPressed()) {
 		//divide by the render scale to adjust for the size of the viewport
 		float mousePosX = getMousePosition().x / getSceneTree()->getRenderScale().x;
 
-		float halfSliderButtonWidth = sliderButton.getSize().x / 2; //minus this from any position calculations, 
+		float halfSliderButtonWidth = sliderButton->getSize().x / 2; //minus this from any position calculations, 
 																    //keeps the mouse position centered onto the Button
 		float lowerBound = -halfSliderButtonWidth;
 		float upperBound = size.x - halfSliderButtonWidth;
 
 		//minus by global position of entire slider to get the position of the mouse local to the slider button
 		//also minus by half of the slider button's size, helps keep mouse centered on the button
-		sliderButton.position.x = mousePosX - getGlobalPosition().x - halfSliderButtonWidth;
+		sliderButton->position.x = mousePosX - getGlobalPosition().x - halfSliderButtonWidth;
 
 		//linear interpolation to find value from slider button position
-		value = min + ((sliderButton.position.x - lowerBound) * ((max - min) / (upperBound - lowerBound)));
+		value = min + ((sliderButton->position.x - lowerBound) * ((max - min) / (upperBound - lowerBound)));
 
 		//make sure the value and position of the Button doesnt go out of bounds of the Slider
-		sliderButton.position.x = std::clamp(sliderButton.position.x, lowerBound, upperBound);
+		sliderButton->position.x = std::clamp(sliderButton->position.x, lowerBound, upperBound);
 		value = std::clamp(value, min, max);
 	}
 

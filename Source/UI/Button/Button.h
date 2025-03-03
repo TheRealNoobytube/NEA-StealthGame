@@ -8,7 +8,7 @@
 
 class Button : public Node2D {
 private:
-	Label label;
+	Label* label = new Label();
 	Vector2D size = Vector2D(60, 20);
 	Color normalColor = Color(53, 68, 127);
 	Color pressColor = Color(33, 48, 107);

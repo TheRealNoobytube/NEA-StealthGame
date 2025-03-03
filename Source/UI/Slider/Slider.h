@@ -7,7 +7,7 @@ private:
 	Texture sliderBackground;
 	Texture sliderProgress;
 
-	Button sliderButton;
+	Button* sliderButton = new Button();
 
 	Vector2D size = Vector2D(50, 10);
 

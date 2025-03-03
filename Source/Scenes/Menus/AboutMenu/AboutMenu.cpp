@@ -1,12 +1,12 @@
 #include "AboutMenu.h"
 
 AboutMenu::AboutMenu( std::string name) : Node2D(name){
-	addChild(&aboutText);
-	aboutText.setTextWrapLength(600);
-	aboutText.setFontSize(24);
-	aboutText.scale = Vector2D(0.35, 0.35);
+	addChild(aboutText);
+	aboutText->setTextWrapLength(600);
+	aboutText->setFontSize(24);
+	aboutText->scale = Vector2D(0.35, 0.35);
 
-	aboutText.text = "This game was created for my Year 13 A-Level NEA." 
+	aboutText->text = "This game was created for my Year 13 A-Level NEA."
 	"\n The goal is to go through the levels as stealthily as possible, picking up any items along the way to beat"
 	"\n                                      the final boss."
 
@@ -18,7 +18,7 @@ AboutMenu::AboutMenu( std::string name) : Node2D(name){
 	"\n                                 Space: Pick Up Item"
 	"\n                Left Mouse Button: Use Weapon/Punch";
 
-	addChild(&backButton);
+	addChild(backButton);
 }
 
 
@@ -28,15 +28,14 @@ void AboutMenu::ready() {
 	Vector2D viewportSize = getSceneTree()->getViewportSize();
 
 	//centers all the ui elements
-	aboutText.position.x = (viewportSize.x / 2) - ((aboutText.getTextSize().x / 2) * aboutText.scale.x);
-	aboutText.position.y = 2;
+	aboutText->position.x = (viewportSize.x / 2) - ((aboutText->getTextSize().x / 2) * aboutText->scale.x);
+	aboutText->position.y = 2;
+	aboutText->color = Color(20, 220, 255);
 
-	backButton.position.x = (viewportSize.x / 2) - (backButton.getSize().x / 2);
-	backButton.position.y = viewportSize.y - 30;
+	backButton->position.x = (viewportSize.x / 2) - (backButton->getSize().x / 2);
+	backButton->position.y = viewportSize.y - 30;
 
-	aboutText.color = Color(20, 220, 255);
-
-	backButton.on_click.connect([this]() { this->onBackButtonClick(); });
+	backButton->on_click.connect([this]() { this->onBackButtonClick(); });
 	
 }
 

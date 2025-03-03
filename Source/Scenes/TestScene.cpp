@@ -1,50 +1,52 @@
 #include "TestScene.h"
 
 TestScene::TestScene(std::string name) : Level(name){
-	worldLayer.addChild(&tiles);
-	worldLayer.addChild(&body);
-	worldLayer.addChild(&body2);
+	worldLayer->addChild(tiles);
+	worldLayer->addChild(body);
+	worldLayer->addChild(body2);
 
-	body.addChild(&shape);
-	body2.addChild(&shape2);
+	body->addChild(shape);
+	body2->addChild(shape2);
 
-	uiLayer.addChild(&backButton);
-	itemLayer.addChild(&item);
-	itemLayer.addChild(&item2);
-	itemLayer.addChild(&pistol);
+	shape->visible = true;
+	shape2->visible = true;
 
-	pistol.position = Vector2D(20, 0);
 
-	item2.position = Vector2D(40, 40);
+	uiLayer->addChild(backButton);
+	itemLayer->addChild(item);
+	itemLayer->addChild(item2);
+	itemLayer->addChild(pistol);
 
-	playerLayer.addChild(&player);
-	this->currentPlayer = &this->player;
+	pistol->position = Vector2D(20, 0);
+
+	item2->position = Vector2D(40, 40);
+
+	playerLayer->addChild(player);
+	this->currentPlayer = this->player;
 
 	for (int i = 0; i < 1; i++) {
 		Enemy* newEnemy = new Enemy();
-		enemyLayer.addChild(newEnemy);
+		enemyLayer->addChild(newEnemy);
 		newEnemy->position = Vector2D(rand() / 300, rand() / 300);
 	}
 }
 
 TestScene::~TestScene() {
-	for (int i = 0; i < enemyLayer.getChildCount(); i++) {
-		delete enemyLayer.getChild(i);
-	}
+
 }
 
 void TestScene::ready() {
 
-	player.position = Vector2D(100, 0);
+	player->position = Vector2D(100, 0);
 	//enemy.position = Vector2D(200, 90);
 
-	body.position = Vector2D(40, 40);
-	body2.position = Vector2D(100, 60);
-	shape2.setSize(Vector2D(100, 20));
+	body->position = Vector2D(40, 40);
+	body2->position = Vector2D(100, 60);
+	shape2->setSize(Vector2D(100, 20));
 
-	backButton.position.x = 3;
-	backButton.position.y = 3;
-	backButton.on_click.connect([this]() { onBackButtonPressed(); });
+	backButton->position.x = 3;
+	backButton->position.y = 3;
+	backButton->on_click.connect([this]() { onBackButtonPressed(); });
 
 
 	//for (int i = 0; i < 8; i++) {
@@ -71,10 +73,11 @@ void TestScene::ready() {
 
 	for (int i = 0; i < positions.getSize(); i++) {
 		CollisionBody* wall = new CollisionBody();
-		wall->position = Vector2D(positions.get(i).x * navMesh.boxSize.x, positions.get(i).y * navMesh.boxSize.y);
+		wall->position = Vector2D(positions.get(i).x * navMesh->boxSize.x, positions.get(i).y * navMesh->boxSize.y);
 		addChild(wall);
 		CollisionRect* shape = new CollisionRect();
-		shape->setSize(navMesh.boxSize);
+		shape->setSize(navMesh->boxSize);
+		shape->visible = true;
 		wall->addChild(shape);
 	}
 

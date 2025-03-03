@@ -1,19 +1,19 @@
 #include "AnimatedSprite.h"
 
 AnimatedSprite::AnimatedSprite(std::string filepath, std::string name) : Sprite(filepath, name) {
-	addChild(&animationTimer);
+	addChild(animationTimer);
 }
 
 AnimatedSprite::AnimatedSprite(Texture* texture, std::string name) : Sprite(texture, name) {
-	addChild(&animationTimer);
+	addChild(animationTimer);
 }
 
 
 void AnimatedSprite::ready() {
 	__super::ready();
-	animationTimer.loop = false;
+	animationTimer->loop = false;
 
-	animationTimer.timeout.connect([this]() { animationTimerTimeout(); });
+	animationTimer->timeout.connect([this]() { animationTimerTimeout(); });
 	setFps(fps);
 }
 
@@ -60,13 +60,13 @@ void AnimatedSprite::play(std::string name, bool restart) {
 	flipV = animations.get(currentAnimationIndex).flipV;
 
 	loop = animations.get(currentAnimationIndex).loop;
-	animationTimer.start();
+	animationTimer->start();
 }
 
 
 void AnimatedSprite::setFps(int fps) {
 	this->fps = fps;
-	animationTimer.setLength(1.0 / ((float)fps * speedScale));
+	animationTimer->setLength(1.0 / ((float)fps * speedScale));
 }
 
 int AnimatedSprite::getFps() {
@@ -104,7 +104,7 @@ void AnimatedSprite::animationTimerTimeout() {
 		}
 	}
 
-	animationTimer.start();
+	animationTimer->start();
 }
 
 int AnimatedSprite::findAnimationIndex(std::string name) {
@@ -122,4 +122,21 @@ AnimatedSprite::Animation* AnimatedSprite::getAnimation(std::string name) {
 		return nullptr;
 	}
 	return &animations.get(index);
+}
+
+void AnimatedSprite::stop() {
+	animationTimer->stop();
+	currentAnimationIndex = -1;
+}
+
+bool AnimatedSprite::isPlaying() {
+	return animationTimer->isRunning();
+}
+
+std::string AnimatedSprite::getAnimationName() {
+	if (currentAnimationIndex == -1) {
+		return "";
+	}
+
+	return animations.get(currentAnimationIndex).name;
 }

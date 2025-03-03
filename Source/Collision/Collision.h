@@ -9,6 +9,7 @@ public:
 	enum CollisionLayer {
 		WORLD = 1,
 		ENTITIES = 2,
-		ITEMS = 4
+		ITEMS = 4,
+		PROJECTILES = 8
 	};
 };

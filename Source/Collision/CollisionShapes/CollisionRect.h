@@ -14,7 +14,7 @@ public:
 
 
 	Color testColor = Color(255, 0, 0);
-	bool visible = true;
+	bool visible = false;
 	bool disabled = false;
 
 

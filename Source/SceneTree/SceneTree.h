@@ -28,6 +28,8 @@ private:
 	bool mouseButtonsJustPressed[4] = { false };
 	bool mouseButtonsReleased[4] = { false };
 
+	void deleteNode(Node* node);
+
 public:
 	SceneTree(Node* mainScene, SDL_Renderer* renderer, Vector2D viewportSize, std::string basePath = SDL_GetBasePath());
 	Node* getRoot();

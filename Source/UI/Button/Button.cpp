@@ -2,7 +2,7 @@
 
 Button::Button(std::string text, std::string name) : Node2D(name) {
 	setText(text);
-	addChild(&label);
+	addChild(label);
 	
 	
 }
@@ -15,8 +15,8 @@ void Button::ready(){
 	setPressTexture(getSceneTree()->getBasePath() + "..\\Assets\\Button\\ButtonPressed.png");
 	currentTexture = normalTexture;
 
-	label.scale = Vector2D(0.5, 0.5);
-	label.setFontSize(24);
+	label->scale = Vector2D(0.5, 0.5);
+	label->setFontSize(24);
 }
 
 void Button::update(float delta){
@@ -86,8 +86,8 @@ void Button::update(float delta){
 			currentTexture = normalTexture;
 		}
 	}
-	label.position.x = (size.x / 2) - (label.getTextSize().x / 2) * label.scale.x; //aligns text to the center of the button
-	label.position.y = (size.y / 2) - (label.getTextSize().y / 2) * label.scale.y;
+	label->position.x = (size.x / 2) - (label->getTextSize().x / 2) * label->scale.x; //aligns text to the center of the button
+	label->position.y = (size.y / 2) - (label->getTextSize().y / 2) * label->scale.y;
 
 	if (useTextures) {
 		currentTexture.draw(getGlobalPosition(), scale, size);
@@ -129,19 +129,19 @@ void Button::setSize(Vector2D size) {
 }
 
 void Button::setText(std::string text) {
-	this->label.text = text;
+	this->label->text = text;
 
 }
 
 std::string Button::getText() {
-	return this->label.text;
+	return this->label->text;
 }
 
 void Button::setAntiAliasing(bool antiAliasing) {
-	this->label.antiAliasing = true;
+	this->label->antiAliasing = true;
 }
 bool Button::antiAliasingEnabled() {
-	return this->label.antiAliasing;
+	return this->label->antiAliasing;
 }
 
 bool Button::isPressed() {

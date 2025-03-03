@@ -4,15 +4,15 @@
 
 class SettingsMenu : public Node2D {
 private:
-	Label settingsText = Label("Settings");
+	Label* settingsText = new Label("Settings");
 
-	Label musicSliderText = Label("Music");
-	Slider musicSlider;
+	Label* musicSliderText = new Label("Music");
+	Slider* musicSlider = new Slider();
 
-	Label soundSliderText = Label("SFX");
-	Slider soundSlider;
+	Label* soundSliderText = new Label("SFX");
+	Slider* soundSlider = new Slider();
 
-	Button backButton = Button("Back");
+	Button* backButton = new Button("Back");
 
 public:
 	Node* lastScene;

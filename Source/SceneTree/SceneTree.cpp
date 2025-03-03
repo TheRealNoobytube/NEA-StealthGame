@@ -84,17 +84,28 @@ void SceneTree::freeNodes() {
 
 		for (int i = 0; i < queuedForDeletion.getSize(); i++) {
 			Node* current = queuedForDeletion.get(i);
+
 			if (current->getParent() != nullptr) {
 				current->getParent()->removeChild(current);
 			}
 
-			if (current != nullptr) {
-				delete current;
-				current = nullptr;
-			}
+			deleteNode(current);
 		}
+
 		queuedForDeletion.clear();
 	}
+
+	
+}
+
+void SceneTree::deleteNode(Node* node) {
+
+	for (int i = 0; i < node->getChildCount(); i++) {
+		deleteNode(node->getChild(i));
+	}
+
+	//node->getParent()->removeChild(node);
+	delete node;
 }
 
 
@@ -178,6 +189,7 @@ void SceneTree::handleInput(SDL_Event& event) {
 		mouseButtonsJustPressed[button] = true;
 		mouseButtonsPressed[button] = true;
 		mouseButtonsReleased[button] = false;
+
 		break;
 
 	case SDL_MOUSEBUTTONUP:

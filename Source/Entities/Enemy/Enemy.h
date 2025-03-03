@@ -18,15 +18,15 @@ public:
 
 	WalkingDirection walkDirection = WALKING_UP;
 
-	Pathfinding pathfinding;
+	Pathfinding* pathfinding = new Pathfinding();
 	Player* player;
 
-	TimerNode pathTimer;
+	TimerNode* pathTimer = new TimerNode();
 
-	AnimatedSprite sprite;
-	CollisionRect collision;
+	AnimatedSprite* sprite = new AnimatedSprite();
+	CollisionRect* collision = new CollisionRect();
 
-	bool disableAI = false;
+	bool disableAI = true;
 
 	bool walking = false;
 
@@ -37,4 +37,6 @@ public:
 	void physicsUpdate(float delta) override;
 
 	void onPathTimerTimeout();
+
+	void onDeath(float damage) override;
 };

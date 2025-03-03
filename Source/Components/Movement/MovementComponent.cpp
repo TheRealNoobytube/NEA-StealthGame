@@ -2,8 +2,8 @@
 
 MovementComponent::MovementComponent(Entity* entity, std::string name) : Node2D(name) {
 	this->entity = entity;
-	addChild(&sweptRaycast);
-	sweptRaycast.visible = false;
+	addChild(sweptRaycast);
+	sweptRaycast->visible = false;
 }
 
 void MovementComponent::ready() {
@@ -14,13 +14,19 @@ void MovementComponent::update(float delta) {
 
 }
 
-bool MovementComponent::applyVelocity() {
+List<CollisionData> MovementComponent::applyVelocity() {
 	if (velocity == Vector2D(0, 0)) {
 		return false;
 	}
 
-	sweptRaycast.targetPosition = velocity;
-	sweptRaycast.mask = entity->mask;
+	if (direction.x != 0 || direction.y != 0) {
+		lookingDirection = direction;
+	}
+
+	sweptRaycast->targetPosition = velocity;
+	sweptRaycast->mask = entity->mask;
+
+	Vector2D oldVelocity = velocity;
 
 	List<CollisionData> data;
 
@@ -28,7 +34,7 @@ bool MovementComponent::applyVelocity() {
 	entity->position.x += velocity.x;
 	entity->position.y += velocity.y;
 
-	return !data.isEmpty();
+	return data;
 }
 
 void MovementComponent::findCollisions(Node* node, List<CollisionData>* data) {
@@ -48,9 +54,9 @@ void MovementComponent::findCollisions(Node* node, List<CollisionData>* data) {
 					auto entityShape = dynamic_cast<CollisionRect*>(entity->getChild(j));
 
 					if (entityShape != nullptr) {
-						sweptRaycast.position = entityShape->position;
-						sweptRaycast.position.x += entityShape->getSize().x / 2;
-						sweptRaycast.position.y += entityShape->getSize().y / 2;
+						sweptRaycast->position = entityShape->position;
+						sweptRaycast->position.x += entityShape->getSize().x / 2;
+						sweptRaycast->position.y += entityShape->getSize().y / 2;
 
 						CollisionRect tempRect;
 
@@ -60,12 +66,12 @@ void MovementComponent::findCollisions(Node* node, List<CollisionData>* data) {
 
 						tempRect.setSize(Vector2D(bodyShape->getSize().x + entityShape->getSize().x, bodyShape->getSize().y + entityShape->getSize().y));
 
-						sweptRaycast.checkAgainstRect(&tempRect);
+						sweptRaycast->checkAgainstRect(&tempRect);
 
-						if (sweptRaycast.isColliding()) {
-							data->add(CollisionData(true, sweptRaycast.getIntersectionPoint(), body));
-							velocity.x += abs(velocity.x) * (1 - sweptRaycast.getContactTime()) * sweptRaycast.getContactNormal().x;
-							velocity.y += abs(velocity.y) * (1 - sweptRaycast.getContactTime()) * sweptRaycast.getContactNormal().y;
+						if (sweptRaycast->isColliding()) {
+							data->add(CollisionData(true, sweptRaycast->getIntersectionPoint(), body));
+							velocity.x += abs(velocity.x) * (1 - sweptRaycast->getContactTime()) * sweptRaycast->getContactNormal().x;
+							velocity.y += abs(velocity.y) * (1 - sweptRaycast->getContactTime()) * sweptRaycast->getContactNormal().y;
 						}
 					}
 				}
@@ -76,4 +82,8 @@ void MovementComponent::findCollisions(Node* node, List<CollisionData>* data) {
 	for (int i = 0; i < node->getChildCount(); i++) {
 		findCollisions(node->getChild(i), data);
 	}
+}
+
+Vector2D MovementComponent:: getLookingDirection() {
+	return lookingDirection;
 }

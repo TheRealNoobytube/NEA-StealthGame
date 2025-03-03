@@ -4,8 +4,8 @@
 
 class AboutMenu : public Node2D{
 private:
-	Label aboutText = Label();
-	Button backButton = Button("Back");
+	Label* aboutText = new Label();
+	Button* backButton = new Button("Back");
 
 public:
 	Node* lastScene;

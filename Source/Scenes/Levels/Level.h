@@ -10,16 +10,18 @@ class Player;
 class Level : public Node2D {
 public:
 	Level(std::string name);
-	NavigationMesh navMesh;
+
+	NavigationMesh* navMesh = new NavigationMesh();
 	Player* currentPlayer;
 
-	ItemsHUD itemsHUD;
+	ItemsHUD* itemsHUD = new ItemsHUD();
 
-	Node2D itemLayer;
-	Node2D worldLayer;
-	Node2D playerLayer;
-	Node2D enemyLayer;
-	Node uiLayer;
+	Node2D* itemLayer = new Node2D();
+	Node2D* worldLayer = new Node2D();
+	Node2D* projectileLayer = new Node2D();
+	Node2D* playerLayer = new Node2D();
+	Node2D* enemyLayer = new Node2D();
+	Node* uiLayer = new Node();
 
 	void ready() override;
 	void update(float delta) override;
