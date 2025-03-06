@@ -10,6 +10,7 @@ public:
 		WORLD = 1,
 		ENTITIES = 2,
 		ITEMS = 4,
-		PROJECTILES = 8
+		PROJECTILES = 8,
+		PLAYER = 16
 	};
 };

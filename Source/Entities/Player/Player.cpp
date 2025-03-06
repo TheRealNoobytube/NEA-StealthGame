@@ -12,14 +12,13 @@ Player::Player(std::string name) : Entity(name) {
 void Player::ready() {
 	__super::ready();
 
-	this->speed = 1;
+	this->speed = 3;
+
+	layer = layer | PLAYER;
 
 	collisionRect->setSize(Vector2D(8, 17));
 	collisionRect->position = Vector2D(-collisionRect->getSize().x / 2, -collisionRect->getSize().y / 2);
 	collisionRect->visible = false;
-
-
-
 
 	sprite->position = Vector2D(-8, -16);
 	sprite->visible = true;
@@ -208,18 +207,7 @@ void Player::stateUpdate(State state) {
 			}
 		}
 		break;
-
-	case(LEAN):
-
-		if (weaponInventory->getCurrentItem() != nullptr) {
-			if (isMouseButtonJustPressed(SDL_BUTTON_LEFT)) {
-				weaponInventory->useCurrentItem();
-			}
-		}
-		break;
 	}
-
-
 }
 
 
@@ -428,53 +416,3 @@ void Player::onWeaponUsed(Item* weapon) {
 	}
 }
 
-
-/*void Player::onWeaponPickup(Item* item) {
-	for (int i = 0; i < weapons.getSize(); i++) {
-		if (item->getItemID() == weapons.get(i)->getItemID()) {
-			return;
-		}
-	}
-
-	weapons.add(item);
-
-	if (currentWeaponIndex == -1) {
-		currentWeaponIndex = 0;
-		item->equip(this);
-	}
-
-	if (itemsHUD != nullptr) {
-		itemsHUD->addToHUD(item);
-	}
-}
-
-void Player::useWeapon() {
-	if (currentWeaponIndex == -1) {
-		return;
-	}
-
-	getCurrentWeapon()->use();
-}
-
-void Player::nextWeapon() {
-	if (currentWeaponIndex == -1) {
-		return;
-	}
-
-	currentWeaponIndex = (currentWeaponIndex + 1) % weapons.getSize();
-
-	if (itemsHUD != nullptr) {
-		if (!itemsHUD->showOnHUD(weapons.get(currentWeaponIndex))) {
-			return;
-		}
-	}
-}
-
-Item* Player::getCurrentWeapon() {
-
-	if (currentWeaponIndex == -1) {
-		return nullptr;
-	}
-
-	return weapons.get(currentWeaponIndex);
-}*/

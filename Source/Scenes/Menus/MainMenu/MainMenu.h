@@ -4,7 +4,7 @@
 #include "Source/Scenes/Menus/AboutMenu/AboutMenu.h"
 #include "Source/Scenes/Menus/SettingsMenu/SettingsMenu.h"
 #include "Source/Scenes/TestScene.h"
-
+#include "Source/Nodes/Rectangle/Rectangle.h"
 
 class MainMenu : public Node2D {
 private:
@@ -13,6 +13,10 @@ private:
 	Button* settingsButton = new Button("Settings");
 	Button* aboutButton = new Button("About");
 	Button* quitButton = new Button("Quit");
+
+	Rectangle* fadeoutRect = new Rectangle();
+
+	bool fadeOut = false;
 
 public:
 	MainMenu(std::string name = "MainMenu");

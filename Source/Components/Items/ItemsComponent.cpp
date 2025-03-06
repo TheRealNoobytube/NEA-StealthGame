@@ -40,9 +40,6 @@ void ItemsComponent::physicsUpdate(float delta) {
 
 
 
-
-
-
 void ItemsComponent::onItemPickup(Item* item) {
 	if (item->isWeapon) {
 		if (!actAsWeaponInventory) {
@@ -121,7 +118,7 @@ void ItemsComponent::nextItem() {
 }
 
 Item* ItemsComponent::getCurrentItem() {
-	if (currentItemIndex > items.getSize() - 1) {
+	if (currentItemIndex == -1) {
 		return nullptr;
 	}
 

@@ -3,8 +3,10 @@
 Enemy::Enemy(std::string name) : Entity(name){
 	addChild(sprite);
 	addChild(collision);
+	pathfinding = new Pathfinding();
 	addChild(pathfinding);
 	addChild(pathTimer);
+	addChild(detectCast);
 }
 
 void Enemy::ready() {
@@ -18,12 +20,12 @@ void Enemy::ready() {
 
 	this->speed = 0.9;
 
-	pathTimer->setLength(0.5);
+	pathTimer->setLength(0.8);
 	pathTimer->timeout.connect([this]() { this->onPathTimerTimeout(); });
 	pathTimer->loop = true;
 	pathTimer->start();
 
-	collision->visible = true;
+	collision->visible = false;
 	collision->setSize(Vector2D(6, 11));
 	collision->position = Vector2D(-collision->getSize().x / 2, -collision->getSize().y / 2);
 
@@ -52,7 +54,8 @@ void Enemy::ready() {
 	sprite->createAnimation("IdleDown", { 24 });
 	sprite->createAnimation("MoveDown", { 25,26,27,28,29 }, animationFps, false, false, true);
 
-
+	detectCast->targetPosition = Vector2D(0, -30);
+	detectCast->mask = PLAYER;
 }
 
 void Enemy::update(float delta) {
@@ -87,6 +90,21 @@ void Enemy::update(float delta) {
 	else if (direction.x > 0 && direction.y > 0) {
 		walkDirection = WALKING_DOWN_RIGHT;
 	}
+
+	if (disableAI) {
+		detectCast->targetPosition = Vector2D(((std::rand() % 3)-1) * 30, ((std::rand() % 3) - 1) * 30);
+		detectCast->forceUpdateRaycast();
+
+		if (detectCast->isColliding()) {
+			disableAI = false;
+		}
+
+
+	}
+	
+
+
+	
 
 
 }

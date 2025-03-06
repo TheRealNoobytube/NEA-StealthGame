@@ -16,7 +16,7 @@ void Projectile::ready() {
 	speed = 1;
 
 	collision->position = Vector2D(1, 1);
-	collision->setSize(Vector2D(3, 3));
+	collision->setSize(Vector2D(5, 5));
 
 	despawnTimer->setLength(1);
 	despawnTimer->loop = false;

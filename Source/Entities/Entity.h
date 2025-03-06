@@ -8,6 +8,7 @@
 #include "Source/Components/Health/HealthComponent.h"
 #include "Source/Components/Items/ItemsComponent.h"
 
+
 class Entity : public CollisionBody {
 private:
 	void damaged(float damage);

@@ -6,6 +6,7 @@ MainMenu::MainMenu(std::string name) : Node2D(name) {
 	addChild(settingsButton);
 	addChild(aboutButton);
 	addChild(quitButton);
+	addChild(fadeoutRect);
 }
 
 void MainMenu::ready() {
@@ -37,13 +38,35 @@ void MainMenu::ready() {
 	settingsButton->on_click.connect([this]() {this->onSettingsButtonClick(); });
 	aboutButton->on_click.connect([this]() {this->onAboutButtonClick(); });
 	quitButton->on_click.connect([this]() {this->onQuitButtonClick(); });
+
+	
+	fadeoutRect->color = Color(0, 0, 0, 0);
+	fadeoutRect->size = getSceneTree()->getViewportSize();
 }
 
+void MainMenu::update(float delta) {
+	__super::update(delta);
+
+	if (fadeOut) {
+		fadeoutRect->color.a += 1;
+
+		if (fadeoutRect->color.a >= 255) {
+			TestScene* testScene = new TestScene();
+			testScene->lastScene = this;
+			getSceneTree()->changeScene(testScene);
+			fadeOut = false;
+		}
+
+	}
+
+}
 
 void MainMenu::onStartButtonClick() {
-	TestScene* testScene = new TestScene();
+	/*TestScene* testScene = new TestScene();
 	testScene->lastScene = this;
-	getSceneTree()->changeScene(testScene);
+	getSceneTree()->changeScene(testScene);*/
+
+	fadeOut = true;
 }
 
 void MainMenu::onSettingsButtonClick() {
@@ -61,8 +84,4 @@ void MainMenu::onAboutButtonClick() {
 void MainMenu::onQuitButtonClick() {
 	SDL_Event event = { SDL_QUIT }; //pushes the quit event in order to close the application
 	SDL_PushEvent(&event);
-}
-
-void MainMenu::update(float delta){
-	__super::update(delta);
 }

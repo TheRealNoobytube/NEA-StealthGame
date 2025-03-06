@@ -91,7 +91,7 @@ void ItemsHUD::hideWeaponIcon() {
 void ItemsHUD::changeItemIcon(Item* item, bool playAnimation) {
 	if (playAnimation) {
 		itemIcon->visible = false;
-		itemsBG->play("ItemSwitch");
+		itemsBG->play("ItemSwitch", true);
 	}
 	else {
 		itemIcon->visible = true;

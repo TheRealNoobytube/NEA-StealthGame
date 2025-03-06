@@ -1,7 +1,8 @@
 #pragma once
 #include "Source/Entities/Entity.h"
-#include "Source/Pathfinding/Pathfinding.h"
 #include "Source/Entities/Player/Player.h"
+
+class Pathfinding;
 
 class Enemy : public Entity {
 public:
@@ -18,7 +19,9 @@ public:
 
 	WalkingDirection walkDirection = WALKING_UP;
 
-	Pathfinding* pathfinding = new Pathfinding();
+	Raycast* detectCast = new Raycast();
+
+	Pathfinding* pathfinding;
 	Player* player;
 
 	TimerNode* pathTimer = new TimerNode();
@@ -40,3 +43,5 @@ public:
 
 	void onDeath(float damage) override;
 };
+
+#include "Source/Pathfinding/Pathfinding.h"

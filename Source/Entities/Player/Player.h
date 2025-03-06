@@ -44,7 +44,7 @@ private:
 	float defaultCameraSpeed = 8;
 	float leanCameraSpeed = 3;
 
-	int cameraLeanOffsetAmount = 40;
+	int cameraLeanOffsetAmount = 80;
 	int cameraLeanRaycastLength = 16;
 	Raycast* cameraLeanRaycast = new Raycast();
 	TimerNode* cameraLeanTimer = new TimerNode();
