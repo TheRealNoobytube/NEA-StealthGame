@@ -22,6 +22,8 @@ public:
 	void update(float delta) override;
 
 
+	void hideHUD();
+
 	void hideItemIcon();
 	void hideWeaponIcon();
 	void changeItemIcon(Item* item, bool playAnimation = true);

@@ -40,6 +40,26 @@ void SettingsMenu::ready() {
 	backButton->position.x = (viewportSize.x / 2) - (backButton->getSize().x / 2);
 	backButton->position.y = viewportSize.y - 30;
 	backButton->on_click.connect([this]() { this->onBackButtonClick(); });
+
+
+
+	std::ifstream config(getSceneTree()->getBasePath() + "../config.ini");
+	std::string line;
+
+
+	while (std::getline(config, line)) {
+
+		if (line.substr(0, 6) == "music-") {
+			int volume = std::stoi(line.substr(6, line.length()));
+			musicSlider->setValue(volume);
+		}
+		else if (line.substr(0, 6) == "sound-") {
+			int volume = std::stoi(line.substr(6, line.length()));
+			soundSlider->setValue(volume);
+		}
+	}
+
+	config.close();
 }
 
 
@@ -50,4 +70,13 @@ void SettingsMenu::update(float delta) {
 void SettingsMenu::onBackButtonClick() {
 	queueFree();
 	getSceneTree()->changeScene(lastScene);
+
+
+	std::ofstream newConfig(getSceneTree()->getBasePath() + "../config.ini");
+
+	newConfig << "music-" << musicSlider->value << "\n";
+	newConfig << "sound-" << soundSlider->value;
+
+	newConfig.close();
+
 }

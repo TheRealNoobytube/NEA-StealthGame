@@ -29,7 +29,7 @@ private:
 	bool loop = false;
 	float speedScale = 1;
 	int fps = 10;
-	int currentAnimationIndex;
+	int currentAnimationIndex = -1;
 	int currentFrameIndex;
 
 	TimerNode* animationTimer = new TimerNode();

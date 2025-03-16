@@ -18,8 +18,10 @@ public:
 	HealthComponent(Entity* entity, std::string name = "HealthComponent");
 
 	void dealDamage(float damage);
+	void heal(float amount, bool overHeal = false);
 
 	void setMaxHealth(float maxHealth, bool updateHealth = false);
+	float getMaxHealth();
 	float getHealth();
 
 };

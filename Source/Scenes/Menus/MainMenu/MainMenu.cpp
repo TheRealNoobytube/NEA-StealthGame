@@ -7,6 +7,7 @@ MainMenu::MainMenu(std::string name) : Node2D(name) {
 	addChild(aboutButton);
 	addChild(quitButton);
 	addChild(fadeoutRect);
+	addChild(loadingText);
 }
 
 void MainMenu::ready() {
@@ -39,7 +40,10 @@ void MainMenu::ready() {
 	aboutButton->on_click.connect([this]() {this->onAboutButtonClick(); });
 	quitButton->on_click.connect([this]() {this->onQuitButtonClick(); });
 
-	
+	loadingText->visible = false;
+	loadingText->color = Color(255, 255, 255);
+	loadingText->setFontSize(30);
+	loadingText->scale = Vector2D(0.5, 0.5);
 	fadeoutRect->color = Color(0, 0, 0, 0);
 	fadeoutRect->size = getSceneTree()->getViewportSize();
 }
@@ -47,8 +51,20 @@ void MainMenu::ready() {
 void MainMenu::update(float delta) {
 	__super::update(delta);
 
+
+}
+
+
+
+void MainMenu::physicsUpdate(float delta) {
+	__super::physicsUpdate(delta);
+
 	if (fadeOut) {
-		fadeoutRect->color.a += 1;
+		fadeoutRect->color.a += 5;
+
+		if (fadeoutRect->color.a >= 250) {
+			loadingText->visible = true;
+		}
 
 		if (fadeoutRect->color.a >= 255) {
 			TestScene* testScene = new TestScene();
@@ -58,14 +74,14 @@ void MainMenu::update(float delta) {
 		}
 
 	}
-
+	else {
+		loadingText->visible = false;
+		fadeoutRect->color.a = 0;
+	}
 }
 
-void MainMenu::onStartButtonClick() {
-	/*TestScene* testScene = new TestScene();
-	testScene->lastScene = this;
-	getSceneTree()->changeScene(testScene);*/
 
+void MainMenu::onStartButtonClick() {
 	fadeOut = true;
 }
 

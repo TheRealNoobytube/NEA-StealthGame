@@ -3,6 +3,7 @@
 
 
 class Collision : public Node2D {
+
 public:
 	Collision(std::string name = "Collision") : Node2D(name){};
 

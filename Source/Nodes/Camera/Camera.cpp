@@ -13,7 +13,11 @@ void Camera::ready() {
 		calculateTargetPosition();
 		skipToTargetPosition();
 	}
+}
 
+
+void Camera::onSceneTreeExited() {
+	getSceneTree()->setRenderOffset(Vector2D(0, 0));
 }
 
 void Camera::physicsUpdate(float delta) {

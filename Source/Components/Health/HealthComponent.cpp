@@ -15,6 +15,16 @@ void HealthComponent::dealDamage(float damage) {
 	}
 }
 
+void HealthComponent::heal(float amount, bool overHeal) {
+	health += amount;
+
+	if (!overHeal) {
+		if (health > maxHealth) {
+			health = maxHealth;
+		}
+	}
+}
+
 void HealthComponent::setMaxHealth(float maxHealth, bool updateHealth) {
 	this->maxHealth = maxHealth;
 
@@ -22,6 +32,10 @@ void HealthComponent::setMaxHealth(float maxHealth, bool updateHealth) {
 		health = maxHealth;
 	}
 
+}
+
+float HealthComponent::getMaxHealth() {
+	return maxHealth;
 }
 
 float HealthComponent::getHealth() {

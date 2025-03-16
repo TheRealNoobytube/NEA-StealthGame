@@ -14,6 +14,7 @@ public:
 	ItemsComponent(bool actAsWeaponInventory = false, Entity* owner = nullptr, std::string name = "ItemsComponent");
 
 	bool actAsWeaponInventory = false;
+	bool pickupEnabled = false;
 
 	Signal<Item*> pickup;
 	Signal<Item*> item_switched;
@@ -38,6 +39,8 @@ public:
 	void nextItem();
 	Item* getCurrentItem();
 	int getCurrentItemIndex();
+
+	bool isItemOnCooldown();
 
 };
 

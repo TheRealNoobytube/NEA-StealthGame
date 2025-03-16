@@ -23,6 +23,4 @@ public:
 
 private:
 	Vector2D size = Vector2D(10, 10);
-
-
 };

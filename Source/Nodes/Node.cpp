@@ -58,11 +58,14 @@ void Node::sceneTreeEntered(SceneTree* sceneTree) { //pre-order depth first trav
 }
 
 void Node::sceneTreeExited() { //pre-order depth first traversal
+	onSceneTreeExited();
 	setSceneTree(nullptr);
 	for (int i = 0; i < getChildCount(); i++) {
 		getChild(i)->sceneTreeExited();
 	}
 }
+
+void Node::onSceneTreeExited() {}
 
 void Node::requestReady() {
 	readied = false;
@@ -152,7 +155,6 @@ void Node::queueFree() {
 	getSceneTree()->enqueueForDeletion(this);
 }
 
-
 float Node::linearInterpolate(float start, float end, float t) {
 	return start + t * (end - start);
 }
@@ -166,9 +168,15 @@ Vector2D Node::getMousePosition() {
 }
 
 void Node::drawRect(Vector2D position, Vector2D size, Color color) {
-	Vector2D renderOffset = getSceneTree()->getRenderOffset();
 
-	SDL_FRect rect = { position.x + renderOffset.x, position.y + renderOffset.y, size.x, size.y };
+	SDL_FRect rect = { position.x, position.y, size.x, size.y };
+
+	if (!ignoreRenderOffset) {
+		Vector2D renderOffset = getSceneTree()->getRenderOffset();
+		rect.x += renderOffset.x;
+		rect.x += renderOffset.y;
+	}
+	
 	SDL_SetRenderDrawColor(getSceneTree()->getRenderer(), color.r, color.g, color.b, color.a);
 	SDL_RenderFillRectF(getSceneTree()->getRenderer(), &rect);
 }
@@ -178,7 +186,13 @@ void Node::drawLine(Vector2D startPoint, Vector2D endPoint, Color color) {
 	Vector2D renderOffset = getSceneTree()->getRenderOffset();
 
 	SDL_SetRenderDrawColor(getSceneTree()->getRenderer(), color.r, color.g, color.b, color.a);
-	SDL_RenderDrawLineF(getSceneTree()->getRenderer(), startPoint.x + renderOffset.x, startPoint.y + renderOffset.y, endPoint.x + renderOffset.x, endPoint.y + renderOffset.y);
+	if (ignoreRenderOffset) {
+		SDL_RenderDrawLineF(getSceneTree()->getRenderer(), startPoint.x, startPoint.y , endPoint.x, endPoint.y);
+	}
+	else {
+		SDL_RenderDrawLineF(getSceneTree()->getRenderer(), startPoint.x + renderOffset.x, startPoint.y + renderOffset.y, endPoint.x + renderOffset.x, endPoint.y + renderOffset.y);
+	}
+	
 }
 
 

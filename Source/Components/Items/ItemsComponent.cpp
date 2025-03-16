@@ -27,13 +27,16 @@ void ItemsComponent::update(float delta) {
 void ItemsComponent::physicsUpdate(float delta) {
 	__super::physicsUpdate(delta);
 
-	List<CollisionData> data = itemPickupArea->requestCollisions();
 
-	if (!data.isEmpty()) {
-		for (int i = 0; i < data.getSize(); i++) {
-			Item* item = reinterpret_cast<Item*>(data.get(i).body);
+	if (pickupEnabled) {
+		List<CollisionData> data = itemPickupArea->requestCollisions();
 
-			onItemPickup(item);
+		if (!data.isEmpty()) {
+			for (int i = 0; i < data.getSize(); i++) {
+				Item* item = reinterpret_cast<Item*>(data.get(i).body);
+
+				onItemPickup(item);
+			}
 		}
 	}
 }
@@ -127,4 +130,14 @@ Item* ItemsComponent::getCurrentItem() {
 
 int ItemsComponent::getCurrentItemIndex() {
 	return currentItemIndex;
+}
+
+bool ItemsComponent::isItemOnCooldown() {
+	if (currentItemIndex != -1) {
+		if (getCurrentItem()->onCooldown()) {
+			return true;
+		}
+	}
+
+	return false;
 }

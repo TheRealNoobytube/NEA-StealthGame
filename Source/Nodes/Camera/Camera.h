@@ -17,6 +17,8 @@ public:
 	void ready() override;
 	void physicsUpdate(float delta) override;
 
+	void onSceneTreeExited() override;
+
 	//finds the new target position based on the camera's parent's current position in the Scene
 	void calculateTargetPosition();
 	//skips the camera smoothing done and goes straight to the target position

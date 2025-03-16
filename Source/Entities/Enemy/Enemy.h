@@ -6,20 +6,48 @@ class Pathfinding;
 
 class Enemy : public Entity {
 public:
-	enum WalkingDirection {
-		WALKING_RIGHT,
-		WALKING_UP_RIGHT,
-		WALKING_UP,
-		WALKING_UP_LEFT,
-		WALKING_LEFT,
-		WALKING_DOWN_LEFT,
-		WALKING_DOWN,
-		WALKING_DOWN_RIGHT
+	enum State {
+		IDLE,
+		PATROLLING,
+		CHASING,
+		NOTICE,
+		ALERT,
+		SHOOT
 	};
 
-	WalkingDirection walkDirection = WALKING_UP;
+	Level* level;
 
-	Raycast* detectCast = new Raycast();
+	State lastState;
+	State currentState;
+	State nextState = IDLE;
+
+
+	enum HorizontalDirection {
+		LEFT,
+		RIGHT,
+		H_NONE
+	};
+
+	enum VerticalDirection {
+		UP,
+		DOWN,
+		V_NONE
+	};
+
+
+	float shootDistance = 60;
+
+	int idleTime = 0;
+	int maxIdleTime = 120;
+
+	int alertTime = 0;
+	int maxAlertTime = 30;
+
+	List<Vector2D> patrolPoints;
+	int currentPatrolIndex = 0;
+
+	VerticalDirection vertical = UP;
+	HorizontalDirection horizontal = H_NONE;
 
 	Pathfinding* pathfinding;
 	Player* player;
@@ -29,9 +57,20 @@ public:
 	AnimatedSprite* sprite = new AnimatedSprite();
 	CollisionRect* collision = new CollisionRect();
 
-	bool disableAI = true;
+	Sprite* detectionIcon = new Sprite();
 
-	bool walking = false;
+	Vector2D lastPlayerPosition = Vector2D(0, 0);
+
+	Raycast* lineOfSightCast = new Raycast();
+	Raycast* detectionCastOne = new Raycast();
+	Raycast* detectionCastTwo = new Raycast();
+	Raycast* noticeCastOne = new Raycast();
+	Raycast* noticeCastTwo = new Raycast();
+	float detectionRange = 60;
+	float noticeRange = 120;
+
+
+	bool disableAI = false;
 
 	Enemy(std::string name = "Enemy");
 
@@ -39,9 +78,28 @@ public:
 	void update(float delta) override;
 	void physicsUpdate(float delta) override;
 
+
+	bool isDetectingPlayer();
+	bool isNoticingPlayer();
+	
+	void foundPlayer();
+	void lostPlayer();
+	void endPursuit();
+
+
+	void stateEntered(State state);
+	void stateExited(State state);
+	void stateUpdate(State state);
+	void statePhysicsUpdate(State state);
+	void calculateMovement();
+
 	void onPathTimerTimeout();
 
+	void onDamaged(float damage) override;
 	void onDeath(float damage) override;
+
+
+	void onTargetReached();
 };
 
 #include "Source/Pathfinding/Pathfinding.h"

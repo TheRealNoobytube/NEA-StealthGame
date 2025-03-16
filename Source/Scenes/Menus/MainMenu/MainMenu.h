@@ -14,6 +14,8 @@ private:
 	Button* aboutButton = new Button("About");
 	Button* quitButton = new Button("Quit");
 
+
+	Label* loadingText = new Label("Loading...");
 	Rectangle* fadeoutRect = new Rectangle();
 
 	bool fadeOut = false;
@@ -23,6 +25,7 @@ public:
 
 	void ready() override;
 	void update(float delta) override;
+	void physicsUpdate(float delta) override;
 
 	void onStartButtonClick();
 	void onSettingsButtonClick();

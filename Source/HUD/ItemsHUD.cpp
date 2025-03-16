@@ -162,3 +162,10 @@ bool ItemsHUD::showingWeapon() {
 int ItemsHUD::getCurrentWeaponID() {
 	return weaponIcon->frame;
 }
+
+void ItemsHUD::hideHUD() {
+	itemsBG->visible = false;
+	itemIcon->visible = false;
+	weaponsBG->visible = false;
+	weaponIcon->visible = false;
+}

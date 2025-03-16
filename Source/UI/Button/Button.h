@@ -25,6 +25,9 @@ private:
 	bool pressed = false;
 
 public:
+	bool visible = true;
+	bool enabled = true;
+
 	bool isClickedWhenLetGo = true;
 
 	Button(std::string text = " ", std::string name = "Button");

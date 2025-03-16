@@ -11,6 +11,8 @@ private:
 
 	List<Node*> queuedForDeletion;
 
+	List<Node*> collisionBodies;
+
 	SDL_Renderer* renderer;
 	std::string basePath;
 
@@ -53,6 +55,10 @@ public:
 	Vector2D getRenderScale();
 	Vector2D getViewportSize();
 	
+	Vector2D getGlobalMousePosition();
+
+	void addToCollisionBodies(Node* body);
+	List<Node*> getCollisionBodies();
 
 
 	void handleInput(SDL_Event& event);

@@ -13,8 +13,8 @@ private:
 
 	Raycast* sweptRaycast = new Raycast();
 
-	Vector2D findIntersectionSize(List<CollisionBody*> bodies);
-	void findCollisions(Node* node, List<CollisionData>* data);
+	//Vector2D findIntersectionSize(List<CollisionBody*> bodies);
+	List<CollisionData> findCollisions();
 
 public:
 	MovementComponent(Entity* entity = nullptr, std::string name = "MovementComponent");

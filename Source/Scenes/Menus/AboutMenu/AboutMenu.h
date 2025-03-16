@@ -1,6 +1,7 @@
 #pragma once
 #include "Source/Nodes/Node2D/Node2D.h"
 #include "Source/UI/Button/Button.h"
+#include "Source/Nodes/AnimatedSprite/AnimatedSprite.h"
 
 class AboutMenu : public Node2D{
 private:
@@ -9,6 +10,8 @@ private:
 
 public:
 	Node* lastScene;
+
+	AnimatedSprite* balls = new AnimatedSprite();
 
 	AboutMenu(std::string name = "AboutMenu");
 

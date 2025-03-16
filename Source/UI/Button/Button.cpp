@@ -21,6 +21,23 @@ void Button::ready(){
 
 void Button::update(float delta){
 	__super::update(delta);
+
+	label->visible = visible;
+
+	if (!enabled) {
+		if (visible) {
+			if (useTextures) {
+				normalTexture.draw(getGlobalPosition(), scale, size);
+			}
+			else {
+				drawRect(getGlobalPosition(), size, normalColor);
+			}
+		}
+
+		return;
+	}
+
+
 	if (isMouseButtonReleased(SDL_BUTTON_LEFT)) {
 		if (isMouseInside && pressed) {
 			if (isClickedWhenLetGo) {
@@ -30,10 +47,7 @@ void Button::update(float delta){
 		}
 		pressed = false;
 	}
-
-
 	
-
 	
 	//finds if the mouse is hovering in the bounds of the button
 	Vector2D mousePos = getMousePosition();
@@ -89,11 +103,13 @@ void Button::update(float delta){
 	label->position.x = (size.x / 2) - (label->getTextSize().x / 2) * label->scale.x; //aligns text to the center of the button
 	label->position.y = (size.y / 2) - (label->getTextSize().y / 2) * label->scale.y;
 
-	if (useTextures) {
-		currentTexture.draw(getGlobalPosition(), scale, size);
-	}
-	else {
-		drawRect(getGlobalPosition(), size, currentColor);
+	if (visible) {
+		if (useTextures) {
+			currentTexture.draw(getGlobalPosition(), scale, size);
+		}
+		else {
+			drawRect(getGlobalPosition(), size, currentColor);
+		}
 	}
 }
 

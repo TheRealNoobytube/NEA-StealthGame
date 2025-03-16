@@ -1,6 +1,8 @@
 #pragma once
 #include "Source/Nodes/Node2D/Node2D.h"
 #include "Source/UI/Slider/Slider.h"
+#include <fstream>
+#include <filesystem>
 
 class SettingsMenu : public Node2D {
 private:

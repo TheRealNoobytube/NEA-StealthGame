@@ -21,7 +21,7 @@ protected:
 							  //means all Nodes share the same ID variable
 
 private:
-	SceneTree* sceneTree;
+	SceneTree* sceneTree = nullptr;
 	Node* parent;
 	List<Node*> children;
 
@@ -31,6 +31,8 @@ private:
 
 public:
 	int id;
+
+	bool ignoreRenderOffset = false;
 
 	Node(std::string name = "Node");
 	virtual ~Node();
@@ -42,6 +44,8 @@ public:
 
 	void sceneTreeEntered(SceneTree* sceneTree);
 	void sceneTreeExited();
+	virtual void onSceneTreeExited();
+
 	void requestReady();
 
 	bool isReady();
@@ -65,6 +69,7 @@ public:
 	std::string getName();
 
 	void queueFree();
+
 
 	float linearInterpolate(float start, float end, float t);
 

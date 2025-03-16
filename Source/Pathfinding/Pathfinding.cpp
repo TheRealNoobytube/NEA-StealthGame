@@ -24,17 +24,29 @@ void Pathfinding::update(float delta) {
 		for (int i = 0; i < currentPath.getSize(); i++) {
 			drawRect(Vector2D(currentPath.get(i).x + navMesh->getGlobalPosition().x, currentPath.get(i).y + navMesh->getGlobalPosition().y), navMesh->boxSize, Color(255, 255, 255, 140));
 		}
+
+
+		if (currentPath.getSize() > 0) {
+
+			Vector2D nextPoint = currentPath.get(0);
+			nextPoint.x += navMesh->boxSize.x / 2;
+			nextPoint.y += navMesh->boxSize.y / 2;
+
+			drawRect(nextPoint, Vector2D(2, 2), Color(255, 255, 0));
+
+		}
+
 	}
 }
 
-void Pathfinding::findPath(Vector2D startPos, Vector2D targetPos) {
+bool Pathfinding::findPath(Vector2D startPos, Vector2D targetPos) {
 	if (navMesh == nullptr) {
-		return;
+		return false;
 	}
 
 	if (navMesh->isInvalidMapPosition(navMesh->globalToMap(targetPos)) || navMesh->isInvalidMapPosition(navMesh->globalToMap(startPos))) {
 		std::cout << "START OR TARGET POSITIONS OUT OF RANGE OF THE NAVIGATION MESH\n";
-		return;
+		return false;
 	}
 
 	bool targetReachable = false;
@@ -53,7 +65,7 @@ void Pathfinding::findPath(Vector2D startPos, Vector2D targetPos) {
 
 	if (!targetReachable) {
 		std::cout << "TARGET IS NOT REACHABLE, CANNOT PATHFIND TO TARGET\n";
-		return;
+		return false;
 	}
 	
 	List<AStarNode> toSearch = { navMesh->getNode(startPos) };
@@ -77,7 +89,7 @@ void Pathfinding::findPath(Vector2D startPos, Vector2D targetPos) {
 
 		if (current.position == targetPosFixedToMap) {
 			constructPath(&navMesh->getNode(current.position), navMesh->getNode(startPos));
-			return;
+			return true;
 		}
 
 		for (int i = 0; i < current.neighbors.getSize(); i++) {
@@ -101,6 +113,8 @@ void Pathfinding::findPath(Vector2D startPos, Vector2D targetPos) {
 			}
 		}
 	}
+
+	return false;
 }
 
 
@@ -109,7 +123,7 @@ float Pathfinding::calculateDistance(Vector2D posOne, Vector2D posTwo) {
 	float y = abs(posTwo.y - posOne.y);
 
 
-	//return (x > y) ? x : y;
+	//return (x > y) ? y : x;
 	return sqrt(x * x + y * y);
 }
 
@@ -140,6 +154,9 @@ void Pathfinding::followPath(Entity* entity) {
 	}
 
 	Vector2D nextPoint = currentPath.get(0);
+	nextPoint.x += navMesh->boxSize.x / 2;
+	nextPoint.y += navMesh->boxSize.y / 2;
+
 	Vector2D navMeshGlobalPos = navMesh->getGlobalPosition();
 
 	nextPoint.x += navMeshGlobalPos.x;
@@ -161,6 +178,11 @@ void Pathfinding::followPath(Entity* entity) {
 	if (entityGlobalPos.x > nextPoint.x - desiredDistanceToPoint && entityGlobalPos.x < nextPoint.x + desiredDistanceToPoint) {
 		if (entityGlobalPos.y > nextPoint.y - desiredDistanceToPoint && entityGlobalPos.y < nextPoint.y + desiredDistanceToPoint) {
 			currentPath.remove(0);
+
+			if (currentPath.isEmpty()) {
+				target_reached.emit();
+			}
 		}
 	}
 }
+

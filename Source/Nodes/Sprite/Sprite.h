@@ -14,7 +14,6 @@ private:
 
 public:
 	bool visible = true;
-	bool ignoreRenderOffset = false;
 
 	bool flipH = false;
 	bool flipV = false;

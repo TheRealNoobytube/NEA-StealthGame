@@ -23,7 +23,7 @@ void Pistol::onUse() {
 
 		PistolShot* projectile = new PistolShot();
 		projectile->position = owner->getGlobalPosition();
-		projectile->movement->direction = owner->movement->getLookingDirection();
+		projectile->movement->direction = owner->movement->direction;
 		projectile->position.x += 5 * projectile->movement->direction.x;
 		projectile->position.y += -10;
 
@@ -31,6 +31,10 @@ void Pistol::onUse() {
 
 		Level* level = reinterpret_cast<Level*>(getSceneTree()->getCurrentScene());
 		level->projectileLayer->addChild(projectile);
+
+		if (enemyItem) {
+			projectile->mask = WORLD | PLAYER;
+		}
 	}
 
 }

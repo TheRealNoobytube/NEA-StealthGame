@@ -3,6 +3,7 @@
 Player::Player(std::string name) : Entity(name) {
 	addChild(sprite);
 	addChild(gunHeldSprite);
+	addChild(deathSprite);
 	addChild(collisionRect);
 	addChild(camera);
 	addChild(cameraLeanRaycast);
@@ -12,7 +13,15 @@ Player::Player(std::string name) : Entity(name) {
 void Player::ready() {
 	__super::ready();
 
-	this->speed = 3;
+	this->speed = 1;
+
+	rect->size = Vector2D(10, 10);
+	rect->color = Color(255, 255, 255);
+
+	health->setMaxHealth(5, true);
+
+	itemInventory->pickupEnabled = true;
+	weaponInventory->pickupEnabled = true;
 
 	layer = layer | PLAYER;
 
@@ -25,6 +34,9 @@ void Player::ready() {
 
 	gunHeldSprite->position = Vector2D(-8, -16);
 	gunHeldSprite->visible = false;
+
+	deathSprite->position = Vector2D(-16, -16);
+	deathSprite->visible = false;
 
 	int animationFps = 14;
 
@@ -80,6 +92,11 @@ void Player::ready() {
 	gunHeldSprite->createAnimation("ShootDown", { 17, 18, 19 }, animationFps, false);
 
 
+	deathSprite->setTexture(getSceneTree()->getBasePath() + "../Assets/Player/PlayerDeath.png");
+	deathSprite->setHFrames(6);
+	deathSprite->createAnimation("DeadLMAO", { 0, 1, 2, 3, 4, 5 }, animationFps / 3);
+
+
 	cameraLeanRaycast->position = Vector2D(0, 0);
 	cameraLeanRaycast->targetPosition = Vector2D(0, -cameraLeanRaycastLength);
 	cameraLeanRaycast->visible = false;
@@ -106,10 +123,7 @@ void Player::update(float delta) {
 		itemInventory->useCurrentItem();
 	}
 
-	stateUpdate(currentState);
-
-
-	drawRect(getGlobalPosition(), Vector2D(1, 1), Color(255, 255, 255));
+	stateUpdate(currentState, delta);
 }
 
 //only do physics operations such as movement inside of physicsUpdate
@@ -125,7 +139,7 @@ void Player::physicsUpdate(float delta) {
 		stateEntered(nextState);
 	}
 
-	statePhysicsUpdate(currentState);
+	statePhysicsUpdate(currentState, delta);
 
 
 	if (!movement->applyVelocity().isEmpty()) {
@@ -161,6 +175,16 @@ void Player::stateEntered(State state) {
 		gunHeldSprite->stop();
 		movement->velocity = Vector2D(0, 0);
 		break;
+	case(DEAD):
+		movement->velocity = Vector2D(0, 0);
+
+		collisionRect->disabled = true;
+
+		gunHeldSprite->visible = false;
+		sprite->visible = false;
+		deathSprite->visible = true;
+
+		deathSprite->play("DeadLMAO");
 	}
 
 
@@ -185,13 +209,15 @@ void Player::stateExited(State state) {
 	}
 }
 
-void Player::stateUpdate(State state) {
+void Player::stateUpdate(State state, float delta) {
 
 	switch (state) {
 	case(IDLE):
 
 		if (weaponInventory->getCurrentItem() != nullptr) {
-			if (isMouseButtonJustPressed(SDL_BUTTON_LEFT)) {
+			if (isMouseButtonJustPressed(SDL_BUTTON_LEFT) || isKeyJustPressed(SDL_SCANCODE_X)) {
+				movement->direction = position.directionTo(getSceneTree()->getGlobalMousePosition()).fixDirection();
+				setAnimationDirection();
 				weaponInventory->useCurrentItem();
 			}
 		}
@@ -202,7 +228,9 @@ void Player::stateUpdate(State state) {
 	case(MOVING):
 
 		if (weaponInventory->getCurrentItem() != nullptr) {
-			if (isMouseButtonJustPressed(SDL_BUTTON_LEFT)) {
+			if (isMouseButtonJustPressed(SDL_BUTTON_LEFT) || isKeyJustPressed(SDL_SCANCODE_X)) {
+				movement->direction = position.directionTo(getSceneTree()->getGlobalMousePosition()).fixDirection();
+				setAnimationDirection();
 				weaponInventory->useCurrentItem();
 			}
 		}
@@ -215,20 +243,31 @@ void Player::stateUpdate(State state) {
 
 
 
-void Player::statePhysicsUpdate(State state) {
+void Player::statePhysicsUpdate(State state, float delta) {
+	if (currentState == DEAD) {
+		return;
+	}
+
 	std::string stateName = "Idle";
 	bool switchToGunSprite = false;
 
+	Vector2D directionToMouse = position.directionTo(getSceneTree()->getGlobalMousePosition()).fixDirection();
 
 	switch (state) {
 	case(IDLE): 
 		stateName = "Idle"; 
-
-		calculateMovement();
-
 		switchToGunSprite = (weaponInventory->getCurrentItem() != nullptr);
 
-		if (movement->direction.x != 0 || movement->direction.y != 0) {
+		calculateMovement();
+		movement->direction.x = linearInterpolate(movement->direction.x, directionToMouse.x, delta);
+		movement->direction.y = linearInterpolate(movement->direction.y, directionToMouse.y, delta);
+	
+		setAnimationDirection();
+
+
+
+
+		if (movement->velocity.x != 0 || movement->velocity.y != 0) {
 			nextState = MOVING;
 		}
 
@@ -252,7 +291,7 @@ void Player::statePhysicsUpdate(State state) {
 			cameraLeanTimer->stop();
 		}
 
-		if (movement->direction == Vector2D(0, 0)) {
+		if (movement->velocity == Vector2D(0, 0)) {
 			nextState = IDLE;
 		}
 
@@ -341,8 +380,11 @@ void Player::calculateMovement() {
 	movement->velocity.x = speed * movement->direction.x;
 	movement->velocity.y = speed * movement->direction.y;
 
+	setAnimationDirection();
+}
 
 
+void Player::setAnimationDirection() {
 	//get the current walkingDirection, used for animations
 	HorizontalDirection lastHorizontal = horizontal;
 	VerticalDirection lastVertical = vertical;
@@ -350,7 +392,7 @@ void Player::calculateMovement() {
 	if (movement->direction.x > 0) {
 		horizontal = RIGHT;
 	}
-	else if(movement->direction.x < 0){
+	else if (movement->direction.x < 0) {
 		horizontal = LEFT;
 	}
 	else {
@@ -372,6 +414,7 @@ void Player::calculateMovement() {
 		vertical = lastVertical;
 	}
 }
+
 
 
 
@@ -416,3 +459,17 @@ void Player::onWeaponUsed(Item* weapon) {
 	}
 }
 
+void Player::onDamaged(float damage){
+
+	if (health->getHealth() <= 0) {
+		if (itemInventory->getCurrentItemIndex() != -1) {
+			if (itemInventory->getCurrentItem()->getItemID() == 0) {
+				itemInventory->useCurrentItem();
+			}
+		}
+	}
+}
+
+void Player::onDeath(float damage) {
+	nextState = DEAD;
+}

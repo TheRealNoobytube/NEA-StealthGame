@@ -14,3 +14,7 @@ void Ration::ready() {
 
 	useSpeed = 0.1;
 }
+
+void Ration::onUse() {
+	owner->health->heal(healingAmount);
+}

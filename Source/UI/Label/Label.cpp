@@ -52,6 +52,12 @@ void Label::renderText() {
 	this->fontTexture = new Texture(textSurface);
 
 	Vector2D globalPos = getGlobalPosition();
+
+	if (!ignoreRenderOffset) {
+		globalPos.x += getSceneTree()->getRenderOffset().x;
+		globalPos.y += getSceneTree()->getRenderOffset().y;
+	}
+
 	this->fontTexture->draw(globalPos.x, globalPos.y, scale.x, scale.y);
 
 }

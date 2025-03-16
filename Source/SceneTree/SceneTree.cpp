@@ -104,6 +104,11 @@ void SceneTree::deleteNode(Node* node) {
 		deleteNode(node->getChild(i));
 	}
 
+	int collisionBodiesIndex = collisionBodies.find(node);
+	if (collisionBodiesIndex > -1) {
+		collisionBodies.remove(collisionBodiesIndex);
+	}
+
 	//node->getParent()->removeChild(node);
 	delete node;
 }
@@ -127,6 +132,34 @@ Vector2D SceneTree::getRenderScale() {
 
 Vector2D SceneTree::getViewportSize() {
 	return this->viewportSize;
+}
+
+
+Vector2D SceneTree::getGlobalMousePosition() {
+	int x;
+	int y;
+	SDL_GetMouseState(&x, &y);
+
+	Vector2D globalPos = Vector2D(x, y);
+	Vector2D renderScale = getRenderScale();
+
+	globalPos.x /= renderScale.x;
+	globalPos.x -= renderOffset.x;
+
+	globalPos.y /= renderScale.y;
+	globalPos.y -= renderOffset.y;
+
+	return globalPos;
+}
+
+
+
+void SceneTree::addToCollisionBodies(Node* body) {
+	collisionBodies.add(body);
+}
+
+List<Node*> SceneTree::getCollisionBodies() {
+	return collisionBodies;
 }
 
 

@@ -26,13 +26,13 @@ public:
 	CollisionRect* pickupRange = new CollisionRect();
 	Sprite* sprite = new Sprite();
 
+	bool enemyItem = false;
 
 	bool isWeapon = false;
 	bool consumable = true;
 	bool stackable = false;
 
 	float useSpeed = 1;
-
 	float damage = 1;
 
 	void ready() override;
@@ -51,8 +51,6 @@ public:
 	bool isEquipped();
 
 	float getItemID();
-
-	void setUseSpeed(float speed);
 
 	bool onCooldown();
 };

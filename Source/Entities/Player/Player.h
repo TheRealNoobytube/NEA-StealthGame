@@ -10,7 +10,8 @@ private:
 		IDLE,
 		MOVING,
 		LEAN,
-		SHOOT
+		SHOOT,
+		DEAD
 	};
 
 	State lastState;
@@ -30,6 +31,9 @@ private:
 		V_NONE
 	};
 
+
+	Rectangle* rect = new Rectangle();
+
 	VerticalDirection vertical = UP;
 	HorizontalDirection horizontal = H_NONE;
 
@@ -38,6 +42,7 @@ private:
 	Camera* camera = new Camera();
 	AnimatedSprite* sprite = new AnimatedSprite();
 	AnimatedSprite* gunHeldSprite = new AnimatedSprite();
+	AnimatedSprite* deathSprite = new AnimatedSprite();
 
 	CollisionRect* collisionRect = new CollisionRect();
 
@@ -52,13 +57,15 @@ private:
 	int currentWeaponIndex = -1;
 	List<Item*> weapons;
 
+	void setAnimationDirection();
+
 
 	void cameraLeanTimerTimeout();
 
 	void stateEntered(State state);
 	void stateExited(State state);
-	void stateUpdate(State state);
-	void statePhysicsUpdate(State state);
+	void stateUpdate(State state, float delta);
+	void statePhysicsUpdate(State state, float delta);
 	void calculateMovement();
 
 	void onItemPickup(Item* item) override;
@@ -69,11 +76,8 @@ private:
 	void onWeaponSwitched(Item* weapon);
 	void onWeaponUsed(Item* weapon);
 
-	//void onWeaponPickup(Item* item);
-	//void useWeapon();
-
-	//void nextWeapon();
-	//Item* getCurrentWeapon();
+	void onDamaged(float damage) override;
+	void onDeath(float damage) override;
 
 
 public:

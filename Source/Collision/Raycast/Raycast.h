@@ -4,6 +4,8 @@
 
 class Raycast : public Collision {
 private:
+	CollisionBody* collider = nullptr;
+
 	bool colliding = false;
 	Vector2D intersectionPoint = Vector2D(0, 0);
 	Vector2D contactNormal = Vector2D(0, 0);
@@ -35,4 +37,5 @@ public:
 	Vector2D getContactNormal();
 	float getContactTime();
 
+	CollisionBody* getCollider();
 };

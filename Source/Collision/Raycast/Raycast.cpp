@@ -42,7 +42,14 @@ bool Raycast::checkForIntersections(Node* node) {
                 auto shape = dynamic_cast<CollisionRect*>(body->getChild(i));
 
                 if (shape != nullptr && !shape->disabled) {
+                    float oldContactTime = contactTime;
                     intersectionFound = findRectIntersections(shape);
+
+                    if (intersectionFound) {
+                        if (contactTime < oldContactTime) {
+                            collider = body;
+                        }
+                    }
                 }
             }
         }
@@ -168,6 +175,7 @@ void Raycast::resetValues() {
     intersectionPoint = Vector2D(INFINITY, INFINITY);
     contactNormal = Vector2D(0, 0);
     contactTime = INFINITY;
+    collider = nullptr;
 }
 
 
@@ -185,4 +193,8 @@ Vector2D Raycast::getContactNormal() {
 
 float Raycast::getContactTime() {
     return contactTime;
+}
+
+CollisionBody* Raycast::getCollider() {
+    return collider;
 }

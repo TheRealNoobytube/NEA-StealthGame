@@ -3,8 +3,10 @@
 #include "Source/Collision/CollisionShapes/CollisionShape.h"
 #include "Source/Collision/CollisionShapes/CollisionRect.h"
 
-
 class CollisionBody : public Collision {
+protected:
+	List<CollisionShape*> shapes = List<CollisionShape*>();
+
 public:
 
 	CollisionBody(std::string name = "CollisionBody");
@@ -14,8 +16,9 @@ public:
 
 	void ready() override;
 	void update(float delta) override;
-	
-	void compareBodies(Node* node, List<CollisionData>* bodies);
+
 	List<CollisionData> requestCollisions();
 
+	void addCollisionShape(CollisionShape* shapes);
+	List<CollisionShape*> getCollisionShapes();
 };

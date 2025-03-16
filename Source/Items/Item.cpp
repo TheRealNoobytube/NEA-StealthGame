@@ -60,7 +60,7 @@ void Item::onRemove() {}
 
 
 bool Item::use() {
-	if (useTimer->isRunning()) {
+	if (onCooldown()) {
 		return false;
 	}
 
@@ -106,6 +106,7 @@ int Item::getQuantity() {
 float Item::getItemID() {
 	return sprite->frame;
 }
+
 
 bool Item::onCooldown() {
 	return useTimer->isRunning();

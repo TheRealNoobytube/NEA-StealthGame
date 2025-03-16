@@ -7,6 +7,7 @@ CollisionBody::CollisionBody(std::string name) : Collision(name){
 
 void CollisionBody::ready() {
 	__super::ready();
+	getSceneTree()->addToCollisionBodies(this);
 }
 
 void CollisionBody::update(float delta) {
@@ -14,46 +15,49 @@ void CollisionBody::update(float delta) {
 
 }
 
-void CollisionBody::compareBodies(Node* currentNode, List<CollisionData>* bodies) {
-	auto node = dynamic_cast<CollisionBody*>(currentNode); 
 
-	if (node != this && node != nullptr) {//make sure the current node isn't the this one and that the current node derives from CollisionBody
+List<CollisionData> CollisionBody::requestCollisions() {
+	List<CollisionData> collisionData;
 
-		//use bitwise operation to check if the current node is in the same collision layer as this body's collision mask
-		//makes sure we don't waste time checking collision with something that isn't in the same layer
-		if (node->layer & (mask)) {
+	List<Node*> bodies = getSceneTree()->getCollisionBodies();
 
-			//CollisionBodys can have multiple CollisionShapes in order to allow for more complex shapes without needing to create more bodies
-			//because of this we go through each child of a CollisionBody and detect collisions in all of its CollisionShapes
-			for (int i = 0; i < getChildCount(); i++) {
-				auto shape = dynamic_cast<CollisionRect*>(getChild(i));
 
-				if (shape != nullptr && !shape->disabled) { //make sure the current node derives from CollisionShape
-					//we don't want to compare collisions with the current node we're looking at, so we check the shapes parent
+	for (int j = 0; j < shapes.getSize(); j++) {
 
-					CollisionData data = shape->detectCollisions(node);
+		CollisionRect* rect = reinterpret_cast<CollisionRect*>(shapes.get(j));
 
-					if (data.colliding) {
-						bodies->add(data);
-						break;
-					}
-					
-				}
+		if (rect->disabled) {
+			continue;
+		}
+
+
+		for (int i = 0; i < bodies.getSize(); i++) {
+			CollisionBody* body = reinterpret_cast<CollisionBody*>(bodies.get(i));
+
+			if (body == this) {
+				continue;
 			}
 
+			if (!(body->layer & (mask))) {
+				continue;
+			}
+
+			CollisionData data = rect->detectCollisions(body);
+
+			if (data.colliding) {
+				collisionData.add(data);
+			}
 		}
 	}
 
-	//depth first search to check with all the nodes in the current tree
-	for (int i = 0; i < currentNode->getChildCount(); i++) {
-		compareBodies(currentNode->getChild(i), bodies);
-	}
+	return collisionData;
 }
 
 
-List<CollisionData> CollisionBody::requestCollisions() {
-	List<CollisionData> bodies;
-	compareBodies(getSceneTree()->getRoot(), &bodies);
-	return bodies;
+void CollisionBody::addCollisionShape(CollisionShape* shape) {
+	shapes.add(shape);
 }
 
+List<CollisionShape*> CollisionBody::getCollisionShapes() {
+	return shapes;
+}

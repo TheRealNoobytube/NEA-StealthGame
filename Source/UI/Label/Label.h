@@ -20,6 +20,7 @@ public:
 	std::string text;
 	bool antiAliasing = true;
 	
+	bool ignoreRenderOffset = true;
 	bool visible = true;
 
 	Label(std::string text = " ", std::string name = "Label");

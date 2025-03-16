@@ -41,7 +41,7 @@ void Projectile::physicsUpdate(float delta) {
 		if (data.get(i).body != owner) {
 			hasHit = true;
 
-			if (data.get(i).body->layer == ENTITIES) {
+			if (data.get(i).body->layer & ENTITIES) {
 				Entity* entity = reinterpret_cast<Entity*>(data.get(i).body);
 				entity->health->dealDamage(damage);
 			}

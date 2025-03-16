@@ -38,6 +38,7 @@ void AnimatedSprite::changeAnimation(std::string name, List<int> frames) {
 }
 
 void AnimatedSprite::play(std::string name, bool restart) {
+
 	int index = findAnimationIndex(name);
 	if (index == -1) {
 		std::cout << "Animation " << name << " not found in List\n";
@@ -50,6 +51,8 @@ void AnimatedSprite::play(std::string name, bool restart) {
 		}
 	}
 
+
+	
 	currentAnimationIndex = index;
 	currentFrameIndex = 0;
 
